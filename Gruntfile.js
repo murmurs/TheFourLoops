@@ -13,59 +13,107 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    nodeunit: {
-      all: ['test/{grunt,tasks,util}/**/*.js']
+    pkg: grunt.file.readJSON('package.json'),
+    concat: {
+      dist: {
+        src: ['bower_components/angular/angular.js',
+        'bower_components/angular-route/angular-route.js',
+        'client/*.js', 'client/*/*.js'],
+        dest: 'public/production.js'
+      }
     },
+
+    nodemon: {
+      dev: {
+        script: 'server/server.js'
+      }
+    },
+
+    uglify: {
+      build: {
+        src: 'public/production.js',
+        dest: 'public/production.min.js'
+      }
+    },
+
     jshint: {
-      gruntfile_tasks: ['Gruntfile.js', 'internal-tasks/*.js'],
-      libs_n_tests: ['lib/**/*.js', '<%= nodeunit.all %>'],
-      subgrunt: ['<%= subgrunt.all %>'],
+      files: ['server/server.js', 'client/*.js', 'client/*/*.js'],
       options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: 'nofunc',
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        node: true,
+        jshintrc: '.jshintrc',
+        ignores: []
+      }
+    },
+
+    cssmin: {
+      target: {
+        files: {
+
+        }
       }
     },
     watch: {
-      gruntfile_tasks: {
-        files: ['<%= jshint.gruntfile_tasks %>'],
-        tasks: ['jshint:gruntfile_tasks']
-      },
-      libs_n_tests: {
-        files: ['<%= jshint.libs_n_tests %>'],
-        tasks: ['jshint:libs_n_tests', 'nodeunit']
-      },
-      subgrunt: {
-        files: ['<%= subgrunt.all %>'],
-        tasks: ['jshint:subgrunt', 'subgrunt']
+      scripts: {
+        files: [
+          'client/*.js',
+          'client/*/*.js',
+          'server/server.js'
+        ],
+        tasks: [
+          'jshint',
+          'concat',
+          'uglify'
+        ]
       }
-    },
-    subgrunt: {
-      all: ['test/gruntfile/*.js']
-    },
+      // css: {}
+    }
+
+
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-nodemon');
 
-  // Some internal tasks. Maybe someday these will be released.
-  grunt.loadTasks('internal-tasks');
+  grunt.registerTask('server-dev', function(target) {
+    // Running nodejs in a different process and displaying output on the main console
+    var nodemon = grunt.util.spawn({
+      cmd: 'grunt',
+      grunt: true,
+      args: 'nodemon'
+    });
+    nodemon.stdout.pipe(process.stdout);
+    nodemon.stderr.pipe(process.stderr);
 
-  // "npm test" runs these tasks
-  grunt.registerTask('test', ['jshint', 'nodeunit', 'subgrunt']);
+    grunt.task.run(['watch']);
+  });
 
-  // Default task.
-  grunt.registerTask('default', ['test']);
+  ////////////////////////////////////////////////////
+  // Main grunt tasks
+  ////////////////////////////////////////////////////
 
+  grunt.registerTask('test', [
+    'mochaTest'
+  ]);
+
+  grunt.registerTask('build', ['jshint', 'concat', 'cssmin', 'uglify' //, 'mochaTest' - put this back when i get some tests.
+  ]);
+
+  grunt.registerTask('upload', function(n) {
+    if (grunt.option('prod')) {
+      // add your production server task here
+      // grunt.task.run(['shell']);
+    } else {
+      grunt.task.run(['server-dev']);
+    }
+  });
+
+  grunt.registerTask('deploy', [
+    // add your deploy tasks here
+    'build', 'upload'
+  ]);
 };
