@@ -1,10 +1,10 @@
 console.log("we're live with js & express!");
 
-angular.module('coderace', ['ngRoute', 'coderace.race'])
+angular.module('coderace', ['coderace.race', 'ngRoute'])
 .config(function($routeProvider, $httpProvider){
   $routeProvider
   .when('/', {
-    templateUrl: '../public/index.html',
+    templateUrl: 'client/Race/race.html',
     controller: 'RaceController'
   })
 });
