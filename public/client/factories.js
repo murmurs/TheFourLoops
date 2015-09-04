@@ -25,6 +25,7 @@ angular.module('coderace.factories', [])
 })
 
 .factory('Race', function ($rootScope) {
+  
   return {
   };
 });
