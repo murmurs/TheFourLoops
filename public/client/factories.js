@@ -27,7 +27,7 @@ angular.module('coderace.factories', [])
 .factory('Race', function ($rootScope) {
   var dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
 
-  dataRef.set({
+  dataRef.push({
     Challenges: {
       Sum: {
         Question: "Write a sum function that sums up all of its parameters.",
@@ -38,20 +38,27 @@ angular.module('coderace.factories', [])
       }
     }
   });
+  dataRef.push({
+    Challenges: {
+      Reverse: {
+        Start: "var reverse = function(){}",
+        Question: "Write a reverse function that reverse the strings",
+        Answers: [
+          {"Input": "run", "Output": "nur"},
+          {"Input": "out", "Output": "tuo"}
+        ]
+      }
+    }
+  });
 
   var factory = {};
+  factory.question = [];
+  factory.answer = [];
+  factory.input = [];
 
-  dataRef.child("Challenges/Sum/Question").on("value", function(snapshot) {
-    factory.question = [];
-    factory.question.push(snapshot.val());
-  });
-  dataRef.child("Challenges/Sum/Answers/0/Output").on("value", function(snapshot) {
-    factory.answer = [];
-    factory.answer.push(snapshot.val());
-  });
-  dataRef.child("Challenges/Sum/Answers/0/Input").on("value", function(snapshot) {
-    factory.input = [];
-    factory.input.push(snapshot.val());
+  dataRef.child("Challenges/Sum").on("value", function(snapshot) {
+    factory.question.push(snapshot.Question.val());
+    console.log(snapshot);
   });
 
   return factory;
