@@ -1,21 +1,25 @@
+
 angular.module('coderace.race', [])
 
-.controller('RaceController', function ($scope, Race, socket){
+.controller('sumController', function ($scope, Race, socket){
   
   $scope.code = "var sum = function(){}"; //set a temp value to put in the text area.
 
+  $scope.question = Race.question[0];
+
   $scope.evaluate = function(code) {
-    $scope.inputs = [4,5];
-    $scope.expectedAnswer = 9;
+    $scope.inputs = Race.input[0];
+    $scope.expectedAnswer = Race.answer[0];
     eval(code);
     //this should move into a the Race factory.
+    var fn;
     var response = function(code){ //determine the text response.
       if (typeof sum === "function"){ //a function called sum should now be defined from the text input.
-        if (sum(4,5) === 9) {
-          return sum(4,5) + " - correct!";
+        if (sum($scope.inputs) === $scope.expectedAnswer) {
+          return sum($scope.inputs) + " - correct!";
         }
         else {
-          return sum(4,5) + " - incorrect!";
+          return sum($scope.inputs) + " - incorrect!";
         }
       }
       else {
