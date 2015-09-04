@@ -27,20 +27,17 @@ angular.module('coderace.factories', [])
 .factory('Race', function ($rootScope) {
   var dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
 
-  dataRef.push({
+  dataRef.set({
     Challenges: {
-      Sum: {
+      sum: {
+        Start: "var sum = function(){}",
         Question: "Write a sum function that sums up all of its parameters.",
         Answers: [
           {"Input": [1,2,3], "Output": 6},
           {"Input": [10,20,3], "Output": 33}
         ]
-      }
-    }
-  });
-  dataRef.push({
-    Challenges: {
-      Reverse: {
+      },
+      reverse: {
         Start: "var reverse = function(){}",
         Question: "Write a reverse function that reverse the strings",
         Answers: [
@@ -56,7 +53,7 @@ angular.module('coderace.factories', [])
   factory.answer = [];
   factory.input = [];
 
-  dataRef.child("Challenges/Sum").on("value", function(snapshot) {
+  dataRef.child("Challenges/sum").on("value", function(snapshot) {
     factory.question.push(snapshot.Question.val());
     console.log(snapshot);
   });

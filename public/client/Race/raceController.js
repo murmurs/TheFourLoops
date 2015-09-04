@@ -1,7 +1,7 @@
 
 angular.module('coderace.race', [])
 
-.controller('sumController', function ($scope, Race, socket){
+.controller('raceController', function ($scope, Race, socket){
   
   $scope.code = "var sum = function(){}"; //set a temp value to put in the text area. This needs to be abstracted.
 
