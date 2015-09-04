@@ -1,6 +1,7 @@
-(function test(){
+(function(){
+  var socket = io.connect('http://localhost:3000');
   var text = document.getElementById('text');
   text.addEventListener('input', function(event){
-    console.log(this.value);
+    socket.emit('typing', {text:this.value});
   })
 })();
