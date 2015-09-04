@@ -1,25 +1,15 @@
 var express = require('express');
-var expressInvoked = express();
-var server = require('http').Server(expressInvoked);
-var port = process.env.Port || 3000;
-var path = require('path');
+var app = express();
+var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var textStore = {};
 
-io.on('connection', function(socket){
+server.listen(3000);
 
-  socket.on('typing', function(data){
+app.use(express.static('../public'));
+
+io.on('connection', function (socket) {
+  console.log('connection');
+  socket.on('typing', function (data) {
     console.log(data);
   });
-
-  socket.on('disconnect', function(){
-    console.log("we're disconnected");
-  })
-
-})
-
-expressInvoked.use(express.static(path.join(__dirname, '../public')));
-
-expressInvoked.listen(port, function(){
-  console.log("it's working")
 });
