@@ -15,15 +15,7 @@ io.on('connection', function (socket) {
   var userId = userCount++;
   socket.emit('userId', {userId:userCount});
   userIds.push(userId);
-  console.log('connection');
-  socket.on('typing', function (data) {
-    if(userIds.indexOf(data.userId)){
-      io.sockets.emit('typing',{
-        userId:data.userId,
-        code:data.code
-      });
-    }
+  socket.on('typing', function (data) { //emit typing regardless of user id. do the check on the client side.
+    io.sockets.emit('typing', data); //data has 2 properties, userId and code.
   });
 });
-
-console.log('Listening');
