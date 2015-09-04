@@ -4,7 +4,7 @@ angular.module('coderace', ['coderace.factories','coderace.race', 'ngRoute'])
 .config(function($routeProvider, $httpProvider){
   $routeProvider
   .when('/', {
-    templateUrl: 'client/Race/race.html',
-    controller: 'RaceController'
+    templateUrl: 'client/Race/sum.html',
+    controller: 'sumController'
   })
 });
