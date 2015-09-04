@@ -29,33 +29,29 @@ angular.module('coderace.factories', [])
 
   dataRef.set({
     Challenges: {
-      sum: {
-        Start: "var sum = function(){}",
+      Sum: {
         Question: "Write a sum function that sums up all of its parameters.",
         Answers: [
           {"Input": [1,2,3], "Output": 6},
           {"Input": [10,20,3], "Output": 33}
-        ]
-      },
-      reverse: {
-        Start: "var reverse = function(){}",
-        Question: "Write a reverse function that reverse the strings",
-        Answers: [
-          {"Input": "run", "Output": "nur"},
-          {"Input": "out", "Output": "tuo"}
         ]
       }
     }
   });
 
   var factory = {};
-  factory.question = [];
-  factory.answer = [];
-  factory.input = [];
 
-  dataRef.child("Challenges/sum").on("value", function(snapshot) {
-    factory.question.push(snapshot.Question.val());
-    console.log(snapshot);
+  dataRef.child("Challenges/Sum/Question").on("value", function(snapshot) {
+    factory.question = [];
+    factory.question.push(snapshot.val());
+  });
+  dataRef.child("Challenges/Sum/Answers/0/Output").on("value", function(snapshot) {
+    factory.answer = [];
+    factory.answer.push(snapshot.val());
+  });
+  dataRef.child("Challenges/Sum/Answers/0/Input").on("value", function(snapshot) {
+    factory.input = [];
+    factory.input.push(snapshot.val());
   });
 
   return factory;
