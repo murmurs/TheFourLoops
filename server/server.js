@@ -7,6 +7,7 @@ server.listen(3000);
 
 app.use(express.static('public'));
 
+
 var userCount = 0;
 var userIds = [];
 
