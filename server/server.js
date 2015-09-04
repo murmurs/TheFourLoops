@@ -25,13 +25,13 @@ io.on('connection', function (socket) {
 
 var dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
 
-dataRef.push({
-  challenges: {
-    sum: {
+dataRef.set({
+  Challenges: {
+    Sum: {
       Question: "Writ a sum function that sums up all of its parameters.",
       Answers: [
-        {"input1": [1,2,3], "output1": 6},
-        {"input1": [10,20,3], "output1": 33}
+        {"Input": [1,2,3], "Output": 6},
+        {"Input": [10,20,3], "Output": 33}
       ]
     }
   }
