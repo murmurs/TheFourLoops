@@ -29,31 +29,40 @@ angular.module('coderace.factories', [])
 
   dataRef.set({
     Challenges: {
-      Sum: {
+      sum: {
         Question: "Write a sum function that sums up all of its parameters.",
-        Answers: [
-          {"Input": [1,2,3], "Output": 6},
-          {"Input": [10,20,3], "Output": 33}
-        ]
+        Inputs: [[1,2,3], [10,20,3]],
+        Outputs: [6, 33],
+        Start: "var sum = function(){}"
+      },
+      reverse: {
+        Question: "Write a reverse function that reverses the string.",
+        Inputs: ["run", "face"],
+        Outputs: ["nur", "ecaf"],
+        Start: "var reverse = function(){}"
       }
     }
   });
 
   var factory = {};
+  factory.question = [];
+  factory.input = [];
+  factory.output = [];
+  factory.name = [];
+  factory.start = [];
 
-  dataRef.child("Challenges/Sum/Question").on("value", function(snapshot) {
-    factory.question = [];
-    factory.question.push(snapshot.val());
-  });
-  dataRef.child("Challenges/Sum/Answers/0/Output").on("value", function(snapshot) {
-    factory.answer = [];
-    factory.answer.push(snapshot.val());
-  });
-  dataRef.child("Challenges/Sum/Answers/0/Input").on("value", function(snapshot) {
-    factory.input = [];
-    factory.input.push(snapshot.val());
-  });
+  dataRef.child("Challenges").on("value", function(snapshot) {
+    var obj = snapshot.val();
+    for(var key in obj){
+      factory.name.push(key);
+      factory.question.push(obj[key].Question);
+      factory.input.push(obj[key].Inputs);
+      factory.output.push(obj[key].Outputs);
+      factory.start.push(obj[key.Start]);
+    }
 
+  });
+  console.log(factory);
   return factory;
 
 });
