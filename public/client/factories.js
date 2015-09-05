@@ -58,7 +58,7 @@ angular.module('coderace.factories', [])
       factory.question.push(obj[key].Question);
       factory.input.push(obj[key].Inputs);
       factory.output.push(obj[key].Outputs);
-      factory.start.push(obj[key.Start]);
+      factory.start.push(obj[key].Start);
     }
 
   });
