@@ -1,21 +1,26 @@
 
 angular.module('coderace.race', [])
 
-.controller('sumController', function ($scope, Race, socket){
-  
-  $scope.code = "var sum = function(){}"; //set a temp value to put in the text area. This needs to be abstracted.
+.controller('raceController', function ($scope, Race, socket){
+  function getRandomArbitrary(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }//generate a random number
 
-  $scope.question = Race.question[0];
+  var random = getRandomArbitrary(0, Race.question.length);//random is between 0 and the number of questions
+  
+  $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
+
+  $scope.question = Race.question[random];
 
   $scope.evaluate = function(code) {
 
     //these will be pulled from the Race factory.
     var challengeInputs = {
-      inputs: Race.input[0],
-      answer: Race.answer[0],
-      functionName: "sum",
+      inputs: Race.input[random],
+      output: Race.output[random],
+      functionName: Race.name[random],
       code: code
-    };
+    };//the challenge is randomly generated
 
     //the worker will not be able to access the factory directly.
     //data must be passed to the worker.
