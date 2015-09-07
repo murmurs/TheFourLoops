@@ -35,14 +35,21 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.question = Race.question[random];
 
+  //sets a global variable called expect that utilizes the Chai library.
+  expect = chai.expect;
+
   $scope.evaluate = function(code) {
 
     //these will be pulled from the Race factory.
     var challengeInputs = {
-      inputs: Race.input[random],
-      output: Race.output[random],
-      functionName: Race.name[random],
-      code: code
+      // inputs: Race.input[random],
+      // output: Race.output[random],
+      // functionName: Race.name[random],
+      //inputs: Race.input[0],
+      inputs: [1,2,3], 
+      //answer: Race.answer[0],
+      answers: 6,
+      functionName: "sum",
     };//the challenge is randomly generated
 
     //the worker will not be able to access the factory directly.
@@ -50,12 +57,23 @@ angular.module('coderace.race', ['ui.codemirror'])
     if (window.Worker) { //verify that the browser has worker capability.
       var evalWorker = new Worker("client/evalWorker.js");
       evalWorker.postMessage(challengeInputs);
+      
+      var workerComplete = false;
       evalWorker.onmessage = function(e) { //when the worker sends back its response, update the scope.
         $scope.inputs = e.data.inputs;
         $scope.response = e.data.response;
-        $scope.answer = e.data.answer;
+        $scope.answers = e.data.answer;
         $scope.$apply(); //apply the new scope var to the view.
+        workerComplete = true; //don't execute the timeout function.
       }
+      
+      //check for worker timeout.
+      setTimeout(function() {
+        if (workerComplete === false){ //the worker has not completed after 5 seconds.
+          console.log("taking longer than 5 seconds");
+          evalWorker.terminate(); //terminate the worker.
+        }
+      }, 5000);
     }
   }
 
