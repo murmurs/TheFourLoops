@@ -36,6 +36,9 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.question = Race.question[random];
 
+  //sets a global variable called expect that utilizes the Chai library.
+  expect = chai.expect;
+
   $scope.evaluate = function(code) {
 
     console.log("evaluating");
@@ -58,6 +61,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       inputs: [[1,2,3],[10, 13, 10]], 
       //answer: Race.answer[0],
       answers: [6, 33],
+
       functionName: "sum",
     };//the challenge is randomly generated
 
