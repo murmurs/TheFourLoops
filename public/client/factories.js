@@ -62,7 +62,6 @@ angular.module('coderace.factories', [])
     }
 
   });
-  console.log(factory);
   return factory;
 
 });
