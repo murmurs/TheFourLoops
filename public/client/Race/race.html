@@ -10,7 +10,6 @@
     <h4>Your Code Here</h4>
     <ui-codemirror ng-model="code" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
     <button ng-click="evaluate(code)" class="btn-primary">Submit Code</button>
-    
 
     <div class="stats" ng-if="inputs">
       <div>inputs: {{inputs | json}} </div>
