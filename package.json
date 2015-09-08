@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sinwailam193/TheFourLoops#readme",
   "dependencies": {
+    "autosize": "^3.0.9",
     "express": "^4.13.3",
     "firebase": "^2.2.9",
     "http": "0.0.0",
