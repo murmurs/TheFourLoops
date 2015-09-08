@@ -71,9 +71,9 @@ angular.module('coderace.race', ['ui.codemirror'])
   };
 
   socket.on('typing', function(data) {
-    if (data.userId !== userId) { //if the typing event emitted from the server does not have the same userId as the userId on this client
+    // if (data.userId !== userId) { //if the typing event emitted from the server does not have the same userId as the userId on this client
       $scope.competitorCode = data.code; //populate the competitor text area with the other users code.
-    }
+    // }
   });
 
 });
