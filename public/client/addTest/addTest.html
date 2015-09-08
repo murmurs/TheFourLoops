@@ -2,11 +2,26 @@
   <a href="#/">Home</a>
   <br />
   <form>
-    Name: <input type="text" ng-model="nameContent" /><br />
-    Question: <input type="text" ng-model="questionContent" /><br />
-    Inputs: <input type="text" ng-model="inputContent" /><br />
-    Outputs: <input type="text" ng-model="outputContent" /><br />
-    Starting template: <input type="text" ng-model="startContent" /><br />
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Name: </span>
+      <input type="text" class="form-control" placeholder="Name of question" aria-describedby="sizing-addon3" ng-model="nameContent" />
+    </div>
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Question: </span>
+      <input type="text" class="form-control" placeholder="Question" aria-describedby="sizing-addon3" ng-model="questionContent" />
+    </div>
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Inputs: </span>
+      <input type="text" class="form-control" placeholder="Ex. [[1,2,3], [3,4,6]] or ['face', 'run']" aria-describedby="sizing-addon3" ng-model="inputContent" />
+    </div>
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Outputs: </span>
+      <input type="text" class="form-control" placeholder="Ex. [6, 13] or ['ecaf', 'nur']" aria-describedby="sizing-addon3" ng-model="outputContent" />
+    </div>
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Starting Template: </span>
+      <input type="text" class="form-control" placeholder="Ex. var sum = function() {}" aria-describedby="sizing-addon3" ng-model="startContent" />
+    </div>    
     <button ng-click="send()">Submit</button>
   </form>
 
