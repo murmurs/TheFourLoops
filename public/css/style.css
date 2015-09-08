@@ -1,0 +1,14 @@
+html, body, section, .full-height {
+    height: 100%;
+    width: 100%;
+} 
+
+#opponentEditor{
+    min-height: 600px;
+    -webkit-filter: blur(5px);
+    filter: blur(5px);
+}
+
+h4, button{
+  display: inline;
+}
