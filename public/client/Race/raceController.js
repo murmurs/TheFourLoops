@@ -3,7 +3,6 @@ angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, Race, socket){
   // codemirror options
-  Race.getData();
   
   $scope.editorOptions = {
       lineWrapping : true,
@@ -30,11 +29,29 @@ angular.module('coderace.race', ['ui.codemirror'])
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
 
-  var random = getRandomArbitrary(0, Race.question.length);//random is between 0 and the number of questions
-  
-  $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
+  var random = getRandomArbitrary(0, 2);//random is between 0 and the number of questions
+  // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
+  // $scope.question = Race.question[random];
 
-  $scope.question = Race.question[random];
+  Race.getData(random);
+
+  var challengeInputs;
+
+  $scope.dataLoaded = false;
+
+  $scope.$on('Race:ready', function (event, data) {
+    console.log("race ready!"); // expected to be raceReady!
+    
+    $scope.code = data.startingCode;
+    $scope.question = data.question;
+    $scope.$apply();
+    
+    challengeInputs = {
+      inputs: data.inputs,
+      answers: data.answers,
+      functionName: data.functionName
+    };
+  });
 
   $scope.evaluate = function(code) {
 
@@ -48,19 +65,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.passed = codeResponse.passed;
       $scope.$apply();
     };
-
-    //these will be pulled from the Race factory when the db is straight.
-    var challengeInputs = {
-      // inputs: Race.input[random],
-      // output: Race.output[random],
-      // functionName: Race.name[random],
-      //inputs: Race.input[0],
-      inputs: [[1,2,3],[10, 13, 10]], 
-      //answer: Race.answer[0],
-      answers: [6, 33],
-      functionName: "sum",
-    };//the challenge is randomly generated
-
+  
     //the worker will not be able to access the factory directly.
     //data must be passed to the worker.
     if (window.Worker) { //verify that the browser has worker capability.
@@ -76,9 +81,9 @@ angular.module('coderace.race', ['ui.codemirror'])
         var codeResponse = {
           valid: false,
           error: error.message
-        }
+        };
         renderCodeResponse(codeResponse);
-      }
+      };
 
       evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
         workerComplete = true; //don't execute the timeout function.
@@ -115,7 +120,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   socket.on('typing', function(data) {
     // if (data.userId !== userId) { //if the typing event emitted from the server does not have the same userId as the userId on this client
-      $scope.competitorCode = data.code; //populate the competitor text area with the other users code.
+    $scope.competitorCode = data.code; //populate the competitor text area with the other users code.
     // }
   });
 
