@@ -4,6 +4,7 @@ angular.module('coderace.test', [])
     var childRef = dataRef.child('Challenges');
 
     $scope.tests = $firebaseArray(childRef);
+
     $scope.send = function(){
       $scope.tests.$add({
           Name: $scope.nameContent,
