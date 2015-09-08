@@ -1,0 +1,35 @@
+<h2>Challenge Problem</h2>
+Create a sum function that adds a and b and returns the total.
+
+
+<h4>Your Code Here</h4>
+<textarea ng-model="code" ng-change="typing(code)">{{code}}</textarea>
+<div ng-click="evaluate(code)">
+  <button data-toggle="modal" data-target="#myModal">Submit Code</button>
+</div>
+<div class="stats" ng-if="inputs">
+  <div>inputs: {{inputs | json}} </div>
+  <div>expected Output: {{expectedAnswer}} </div>
+  <div>actual Output: {{response}} </div>
+</div>
+<h4>Opponent Progress:</h4>
+<textarea>{{competitorCode}}</textarea>
+
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

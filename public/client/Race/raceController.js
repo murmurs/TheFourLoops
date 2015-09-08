@@ -36,9 +36,6 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.question = Race.question[random];
 
-  //sets a global variable called expect that utilizes the Chai library.
-  expect = chai.expect;
-
   $scope.evaluate = function(code) {
 
     console.log("evaluating");
@@ -61,7 +58,6 @@ angular.module('coderace.race', ['ui.codemirror'])
       inputs: [[1,2,3],[10, 13, 10]], 
       //answer: Race.answer[0],
       answers: [6, 33],
-
       functionName: "sum",
     };//the challenge is randomly generated
 
@@ -73,10 +69,10 @@ angular.module('coderace.race', ['ui.codemirror'])
       
       var workerComplete = false;
 
-      //if the input from the form is invalid, this worker will trigger.
       evalWorker.onerror = function(error) {
         evalWorker.terminate();
         workerComplete = true;
+        console.log("worker errored! - ", error.message);
         var codeResponse = {
           valid: false,
           error: error.message
@@ -119,7 +115,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   socket.on('typing', function(data) {
     // if (data.userId !== userId) { //if the typing event emitted from the server does not have the same userId as the userId on this client
-      $scope.competitorCode = data.code; //populate the competitor text area with the other users code.
+    $scope.competitorCode = data.code; //populate the competitor text area with the other users code.
     // }
   });
 
