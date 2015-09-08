@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
 
 var checkWaitingRoom = function(){
   
-  var waitingSockets = Object.keys(io.sockets.adapter.rooms['waitingRoom']);
+  var waitingSockets = Object.keys(io.sockets.adapter.rooms.waitingRoom);
 
   if( waitingSockets.length > 1){
 
@@ -60,10 +60,10 @@ var checkWaitingRoom = function(){
     roomCount++;
 
     var player1 = io.of('/').connected[
-        Object.keys(io.sockets.adapter.rooms['waitingRoom'])[0]
+        Object.keys(io.sockets.adapter.rooms.waitingRoom)[0]
       ];
     var player2 = io.of('/').connected[
-        Object.keys(io.sockets.adapter.rooms['waitingRoom'])[1]
+        Object.keys(io.sockets.adapter.rooms.waitingRoom)[1]
       ];
     
     pair(room, player1, player2, function(room){

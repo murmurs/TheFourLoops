@@ -29,29 +29,6 @@ angular.module('coderace.factories', [])
 
   factory.dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
 
-  factory.obj = {
-      sum: {
-        Name: "sum",
-        Question: "Write a sum function that sums up all of its parameters.",
-        Inputs: [[1,2,3], [10,20,3]],
-        Outputs: [6, 33],
-        Start: "var sum = function(){}"
-      },
-      reverse: {
-        Name: "reverse",
-        Question: "Write a reverse function that reverses the string.",
-        Inputs: ["run", "face"],
-        Outputs: ["nur", "ecaf"],
-        Start: "var reverse = function(){}"
-      }
-    };
-
-  (factory.init = function(){
-    factory.dataRef.set({
-      Challenges: factory.obj
-    });
-  })();
-
   factory.getData = function(){
     factory.question = [];
     factory.input = [];

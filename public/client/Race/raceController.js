@@ -3,6 +3,8 @@ angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, Race, socket){
   // codemirror options
+  Race.getData();
+  
   $scope.editorOptions = {
       lineWrapping : true,
       lineNumbers: true,
@@ -13,7 +15,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   };
 
   var textArea = document.getElementById('opponentEditor');
-  autosize(textArea);  
+  // autosize(textArea);  
   // var myCodeMirror = CodeMirror.fromTextArea(textArea);
   // codemirror opponent editor
   // var editor = new CodeMirror(CodeMirror.replace("#opponentEditor"), {
@@ -24,7 +26,6 @@ angular.module('coderace.race', ['ui.codemirror'])
   //   content: document.getElementById("opponentEditor").value
   // });
 
-  Race.getData();
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
