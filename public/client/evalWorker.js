@@ -1,48 +1,54 @@
 onmessage = function(e) {
 
-  //need to layer some testing into here...
-  //not so easy to do...
-  //the processing is done in here...
-  //use a spec runner kind of program...
-  //we start off inside the damn raceController...
-  //wtf are we going to do with that...
+  console.log("start of worker");
 
-
-  eval(e.data.code); //this instantiates all JS written by the user.
-
-  //this should loop through the answers. 
-  //throw an error if any inputs/answers returns an error.
-  //make it work for just one combo to start.
-
-  var codeProcess = function(functionName, inputs, answers){ //determine the text response.
-    if (typeof eval(functionName) === "function"){
-      console.log("line 19", inputs);
-      var challengeFunction = eval(functionName) //turn the functionName text into an actual function.
-      console.log("challengeFunc", challengeFunction);
-      var funcResults = challengeFunction(inputs); //this will execute the function the user was supposed to write. With the inputs as an array.
-      console.log(funcResults);
-      if (funcResults === answers) { //answer is a string. Needs to be coerced...
-        return funcResults + " - correct!";
+  var evaluateTests = function(challengeFunction, inputs, answers) {
+    var responseArr = [];
+    for (var i=0; i<inputs.length; i++){
+      var testResponse = {
+        input: inputs[i],
+        answer: answers[i],
+      };
+      if (challengeFunction(inputs[i]) === answers[i]){ //if the function processes the input to the expected, and answer is correct.
+        testResponse.valid = true;
       }
       else {
-        return funcResults + " - incorrect!";
+        testResponse.valid = false;
+        responseArr.push(testResponse);
+        return responseArr; //the response testing will end when an invalid test is found.
+      }
+    }
+    return responseArr; //all tests are valid, so return.
+  };
+
+  var codeProcess = function(functionName, inputs, answers){ //determine the text response.
+    var challengeFunction = eval(functionName); //turn the functionName text into an actual function.
+    if (typeof challengeFunction === "function"){
+      return {
+        valid: true,
+        error: undefined,
+        tests: evaluateTests(challengeFunction, inputs, answers)
       }
     }
     else {
-      return functionName + " should be a function";
+      return {
+        valid: false,
+        error: functionName + " should be a function"
+      }
     }
   };
 
-  e.data.response = codeProcess(e.data.functionName, e.data.inputs, e.data.answers);
+  //this instantiates all JS written by the user. If any of it errors, it will be caught by the on error event in the controller.
+  eval(e.data.code); 
 
-  console.log("TRETURN", e.data.response);
-  console.log("message received by worker");
-  console.log(e.data.inputs);
+  //if the eval is successful the code will continue.
+  var codeResponse = codeProcess(e.data.functionName, e.data.inputs, e.data.answers);
 
-  postMessage(e.data);
+  console.log("end of code response");
+  postMessage(codeResponse);
 }
 
-
+//sample function that i've been using for sum.
 // var sum = function(arr){
 //   var total = 0;
 //   for (var i=0; i<arr.length; i++){

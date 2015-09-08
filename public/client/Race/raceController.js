@@ -35,20 +35,19 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.question = Race.question[random];
 
-  //sets a global variable called expect that utilizes the Chai library.
-  expect = chai.expect;
-
   $scope.evaluate = function(code) {
 
-    //these will be pulled from the Race factory.
+    console.log("evaluating");
+
+    //these will be pulled from the Race factory when the db is straight.
     var challengeInputs = {
       // inputs: Race.input[random],
       // output: Race.output[random],
       // functionName: Race.name[random],
       //inputs: Race.input[0],
-      inputs: [1,2,3], 
+      inputs: [[1,2,3],[10, 13, 10]], 
       //answer: Race.answer[0],
-      answers: 6,
+      answers: [6, 33],
       functionName: "sum",
     };//the challenge is randomly generated
 
@@ -59,12 +58,28 @@ angular.module('coderace.race', ['ui.codemirror'])
       evalWorker.postMessage(challengeInputs);
       
       var workerComplete = false;
-      evalWorker.onmessage = function(e) { //when the worker sends back its response, update the scope.
-        $scope.inputs = e.data.inputs;
-        $scope.response = e.data.response;
-        $scope.answers = e.data.answer;
-        $scope.$apply(); //apply the new scope var to the view.
+
+      evalWorker.onerror = function(error) {
+        evalWorker.terminate();
+        workerComplete = true;
+        console.log("worker errored! - ", error.message);
+        var codeResponse = {
+          valid: false,
+          error: error.message
+        }
+        renderCodeResponse(codeResponse);
+      }
+
+      evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
         workerComplete = true; //don't execute the timeout function.
+        if (codeResponse.valid) {
+
+        }
+
+        // $scope.inputs = e.data.inputs;
+        // $scope.response = e.data.response;
+        // $scope.answers = e.data.answer;
+        // $scope.$apply(); //apply the new scope var to the view.
       }
       
       //check for worker timeout.
@@ -72,6 +87,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         if (workerComplete === false){ //the worker has not completed after 5 seconds.
           console.log("taking longer than 5 seconds");
           evalWorker.terminate(); //terminate the worker.
+          //create a response for the timeout issues;
         }
       }, 5000);
     }
