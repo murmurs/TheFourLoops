@@ -2,6 +2,8 @@
 angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, Race, socket){
+  
+  $scope.room = false;
   // codemirror options
   
   $scope.editorOptions = {
@@ -119,9 +121,11 @@ angular.module('coderace.race', ['ui.codemirror'])
   };
 
   socket.on('typing', function(data) {
-    // if (data.userId !== userId) { //if the typing event emitted from the server does not have the same userId as the userId on this client
-    $scope.competitorCode = data.code; //populate the competitor text area with the other users code.
-    // }
+    $scope.competitorCode = data.code; 
+  });
+
+  socket.on('roomJoined', function(room){
+    $scope.room = room;
   });
 
 });
