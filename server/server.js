@@ -3,7 +3,6 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var Firebase = require("firebase");
-// var sockUtils = require('./sockUtils.js');
 
 var port = process.env.PORT || 3000;
 
@@ -68,11 +67,14 @@ var checkWaitingRoom = function(){
       ];
     
     pair(room, player1, player2, function(room){
-
-      logRooms();
+      /*  remit roomJoined to all members, possibly for start  */
+      io.sockets.to(room).emit('roomJoined', {
+        room:room
+      });
+      // logRooms();
     });
   }else{
-    logRooms();
+    // logRooms();
   }
 };
 
@@ -131,7 +133,7 @@ var checkPlayerRooms = function(){
           if(err){
             console.log(err);
           }
-          logRooms();
+          // logRooms();
         });
       });
 
