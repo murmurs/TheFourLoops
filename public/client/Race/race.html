@@ -1,15 +1,28 @@
-<h2>Challenge Problem</h2>
-{{ question }}
+<div class='row'>
+  <h2 class="text-center">Challenge Problem</h2>
+  <div class="text-center">
+    {{ question }}
+  </div>
+  
+  <br/>
 
+  <div class="col-xs-6">
+    <h4>Your Code Here</h4>
+    <ui-codemirror ng-model="code" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
+    <button ng-click="evaluate(code)" class="btn-primary">Submit Code</button>
+    
 
-<h4>Your Code Here</h4>
-<textarea ng-model="code" ng-change="typing(code)">{{code}}</textarea>
-<button ng-click="evaluate(code)">Submit Code</button>
-
-<div class="stats" ng-if="inputs">
-  <div>inputs: {{inputs | json}} </div>
-  <div>expected Output: {{answer}} </div>
-  <div>actual Output: {{response}} </div>
+    <div class="stats" ng-if="inputs">
+      <div>inputs: {{inputs | json}} </div>
+      <div>expected Output: {{answer}} </div>
+      <div>actual Output: {{response}} </div>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <h4>Opponent Progress:</h4><br/>
+    <div id='opponent'>
+      <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
+      <!-- <ui-codemirror='{ onLoad: opponentEditor }' id='opponentEditor'>{{competitorCode}}</ui-codemirror> -->
+    </div>
+  </div>
 </div>
-<h4>Opponent Progress:</h4>
-<textarea>{{competitorCode}}</textarea>

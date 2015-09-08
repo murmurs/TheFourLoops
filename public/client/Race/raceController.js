@@ -1,7 +1,29 @@
 
-angular.module('coderace.race', [])
+angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, Race, socket){
+  // codemirror options
+  $scope.editorOptions = {
+      lineWrapping : true,
+      lineNumbers: true,
+      theme: 'cobalt',
+      mode: 'javascript',
+      keymap: 'sublime',
+      autofocus: true
+  };
+
+  var textArea = document.getElementById('opponentEditor');
+  autosize(textArea);  
+  // var myCodeMirror = CodeMirror.fromTextArea(textArea);
+  // codemirror opponent editor
+  // var editor = new CodeMirror(CodeMirror.replace("#opponentEditor"), {
+  //   parserfile: ["http://codemirror.net/1/js/tokenizejavascript.js", 
+  //   "http://codemirror.net/1/js/parsejavascript.js"],
+  //   path: "../codemirror/",
+  //   stylesheet: "../../css/jscolors.css",
+  //   content: document.getElementById("opponentEditor").value
+  // });
+
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
