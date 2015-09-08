@@ -7,11 +7,11 @@ angular.module('coderace.test', [])
       $scope.send = function(){
         $scope.tests.set(
           {
-            Name: $scope.nameContent,
-            Question: $scope.questionContent,
-            Inputs: JSON.parse($scope.inputContent),
-            Outputs: JSON.parse($scope.outputContent),
-            Start: $scope.startContent
+            functionName: $scope.nameContent,
+            question: $scope.questionContent,
+            inputs: JSON.parse($scope.inputContent),
+            answers: JSON.parse($scope.outputContent),
+            startCode: $scope.startContent
           }
         );
         $scope.nameContent = "";
