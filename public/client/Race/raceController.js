@@ -39,6 +39,15 @@ angular.module('coderace.race', ['ui.codemirror'])
 
     console.log("evaluating");
 
+    var renderCodeResponse = function(codeResponse) {
+      $scope.dataLoaded = true; //set this to true to stop the spinner.
+      
+      $scope.validResponse = codeResponse.valid;
+      $scope.tests = codeResponse.tests;
+      $scope.passed = codeResponse.passed;
+      $scope.$apply();
+    };
+
     //these will be pulled from the Race factory when the db is straight.
     var challengeInputs = {
       // inputs: Race.input[random],
@@ -59,10 +68,10 @@ angular.module('coderace.race', ['ui.codemirror'])
       
       var workerComplete = false;
 
+      //if the input from the form is invalid, this worker will trigger.
       evalWorker.onerror = function(error) {
         evalWorker.terminate();
         workerComplete = true;
-        console.log("worker errored! - ", error.message);
         var codeResponse = {
           valid: false,
           error: error.message
@@ -72,14 +81,8 @@ angular.module('coderace.race', ['ui.codemirror'])
 
       evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
         workerComplete = true; //don't execute the timeout function.
-        if (codeResponse.valid) {
-
-        }
-
-        // $scope.inputs = e.data.inputs;
-        // $scope.response = e.data.response;
-        // $scope.answers = e.data.answer;
-        // $scope.$apply(); //apply the new scope var to the view.
+        console.log("codeResponse in on", codeResponse.data);
+        renderCodeResponse(codeResponse.data);
       }
       
       //check for worker timeout.
@@ -87,6 +90,10 @@ angular.module('coderace.race', ['ui.codemirror'])
         if (workerComplete === false){ //the worker has not completed after 5 seconds.
           console.log("taking longer than 5 seconds");
           evalWorker.terminate(); //terminate the worker.
+          renderCodeResponse({
+            valid: false,
+            error: "Taking longer than 5 seconds."
+          });
           //create a response for the timeout issues;
         }
       }, 5000);

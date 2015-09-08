@@ -4,9 +4,7 @@ Create a sum function that adds a and b and returns the total.
 
 <h4>Your Code Here</h4>
 <textarea ng-model="code" ng-change="typing(code)">{{code}}</textarea>
-<div ng-click="evaluate(code)">
-  <button data-toggle="modal" data-target="#myModal">Submit Code</button>
-</div>
+  <button ng-click="evaluate(code)" data-toggle="modal" data-target="#myModal">Submit Code</button>
 <div class="stats" ng-if="inputs">
   <div>inputs: {{inputs | json}} </div>
   <div>expected Output: {{expectedAnswer}} </div>
@@ -22,10 +20,21 @@ Create a sum function that adds a and b and returns the total.
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
+        <h4 class="modal-title">Challenge Response</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <div ng-hide="dataLoaded">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+        <!-- <p>The response from the worker was {{validResponse}}</p> -->
+        <div ng-if="validResponse">
+          <div ng-repeat="(i, test) in tests">
+            input: {{test.input}}, answer: {{test.functionResponse}}
+          </div>
+        </div>
+        <div ng-if="passed">
+          Correct answer! Winner!
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
