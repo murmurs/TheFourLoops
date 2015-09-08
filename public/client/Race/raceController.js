@@ -15,7 +15,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   };
 
   var textArea = document.getElementById('opponentEditor');
-  // autosize(textArea);  
+
   // var myCodeMirror = CodeMirror.fromTextArea(textArea);
   // codemirror opponent editor
   // var editor = new CodeMirror(CodeMirror.replace("#opponentEditor"), {
