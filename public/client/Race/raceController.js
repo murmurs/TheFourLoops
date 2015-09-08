@@ -2,6 +2,8 @@
 angular.module('coderace.race', [])
 
 .controller('raceController', function ($scope, Race, socket){
+  Race.getData();
+  
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
