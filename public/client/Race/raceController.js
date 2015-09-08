@@ -24,6 +24,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   //   content: document.getElementById("opponentEditor").value
   // });
 
+  Race.getData();
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
