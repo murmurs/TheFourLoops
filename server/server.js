@@ -70,7 +70,9 @@ var checkWaitingRoom = function(){
     pair(room, player1, player2, function(room){
       /*  remit roomJoined to all members, possibly for start  */
       io.sockets.to(room).emit('roomJoined', {
-        room:room
+        id:room,
+        player1:player1.id,
+        player2:player2.id
       });
       // logRooms();
     });
@@ -103,7 +105,7 @@ var pair = function(room, player1, player2, callback){
               if(err){
                 console.error(err);
               }else{
-                callback(room);
+                callback(room, player1, player2);
               }
             });
           }

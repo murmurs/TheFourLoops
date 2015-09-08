@@ -1,57 +1,64 @@
 <a href="#/">Home</a>
-<div class='row'>
-  <h2 class="text-center">Challenge Problem</h2>
-  <div class="text-center">
-    {{ question }}
+<div ng-switch="room">
+  <div ng-switch-when="false">
+    <h2>Waiting for Opponent</h2>
   </div>
-  
-  <br/>
-  <div class="col-xs-6">
-    <h4>Your Code Here</h4>
-    <ui-codemirror ng-model="code" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
-    <button ng-click="evaluate(code)" class="btn-primary" data-toggle="modal" data-target="#myModal">Submit Code</button>
-
-    <div class="stats" ng-if="inputs">
-      <div>inputs: {{inputs | json}} </div>
-      <div>expected Output: {{answer}} </div>
-      <div>actual Output: {{response}} </div>
-    </div>
-  </div>
-  <div class="col-xs-6">
-    <h4>Opponent Progress:</h4><br/>
-    <div id='opponent'>
-      <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
-      <!-- <ui-codemirror='{ onLoad: opponentEditor }' id='opponentEditor'>{{competitorCode}}</ui-codemirror> -->
-    </div>
-  </div>
-</div>
-
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Challenge Response</h4>
+  <div ng-switch-default>
+    <div class='row' >
+      <h2 class="text-center">Challenge Problem</h2>
+      <div class="text-center">
+        {{ question }}
       </div>
-      <div class="modal-body">
-      {{dataLoaded}}
-        <div ng-hide="dataLoaded">
-          <i class="fa fa-spinner fa-spin"></i>
+      
+      <br/>
+      <div class="col-xs-6">
+        <h4>Your Code Here</h4>
+        <ui-codemirror ng-model="code" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
+        <button ng-click="evaluate(code)" class="btn-primary" data-toggle="modal" data-target="#myModal">Submit Code</button>
+
+        <div class="stats" ng-if="inputs">
+          <div>inputs: {{inputs | json}} </div>
+          <div>expected Output: {{answer}} </div>
+          <div>actual Output: {{response}} </div>
         </div>
-        <!-- <p>The response from the worker was {{validResponse}}</p> -->
-        <div ng-if="validResponse">
-          <div ng-repeat="(i, test) in tests">
-            input: {{test.input}}, answer: {{test.functionResponse}}
+      </div>
+      <div class="col-xs-6">
+        <h4>Opponent Progress:</h4><br/>
+        <div id='opponent'>
+          <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
+          <!-- <ui-codemirror='{ onLoad: opponentEditor }' id='opponentEditor'>{{competitorCode}}</ui-codemirror> -->
+        </div>
+      </div>
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Challenge Response</h4>
+        </div>
+        <div class="modal-body">
+        {{dataLoaded}}
+          <div ng-hide="dataLoaded">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+          <!-- <p>The response from the worker was {{validResponse}}</p> -->
+          <div ng-if="validResponse">
+            <div ng-repeat="(i, test) in tests">
+              input: {{test.input}}, answer: {{test.functionResponse}}
+            </div>
+          </div>
+          <div ng-if="passed">
+            Correct answer! Winner!
           </div>
         </div>
-        <div ng-if="passed">
-          Correct answer! Winner!
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+    </div>
     </div>
   </div>
 </div>
