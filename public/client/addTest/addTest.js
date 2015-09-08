@@ -1,20 +1,26 @@
 angular.module('coderace.test', [])
   .controller('testController', ['$scope', 'Race', "$firebaseArray", function($scope, Race, $firebaseArray){
-    var childRef = Race.dataRef.child('Challenges');
+    var childRef = Race.dataRef.child('Challenges/');
+    Race.getLength();
 
-    $scope.tests = $firebaseArray(childRef);
-    $scope.send = function(){
-      $scope.tests.$add({
-          Name: $scope.nameContent,
-          Question: $scope.questionContent,
-          Inputs: JSON.parse($scope.inputContent),
-          Outputs: JSON.parse($scope.outputContent),
-          Start: $scope.startContent
-      });
-      $scope.nameContent = "";
-      $scope.questionContent = "";
-      $scope.inputContent = "";
-      $scope.outputContent = "";
-      $scope.startContent = "";
-    }
+    $scope.$on('GotLength', function(event, data){
+      $scope.tests = Race.dataRef.child('Challenges/' + data + "/");
+      $scope.send = function(){
+        $scope.tests.set(
+          {
+            Name: $scope.nameContent,
+            Question: $scope.questionContent,
+            Inputs: JSON.parse($scope.inputContent),
+            Outputs: JSON.parse($scope.outputContent),
+            Start: $scope.startContent
+          }
+        );
+        $scope.nameContent = "";
+        $scope.questionContent = "";
+        $scope.inputContent = "";
+        $scope.outputContent = "";
+        $scope.startContent = "";
+      }
+    })
+
   }]);

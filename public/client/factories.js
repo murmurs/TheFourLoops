@@ -41,7 +41,7 @@ angular.module('coderace.factories', [])
   //     functionName: "reverse",
   //     question: "Write a reverse function that reverses the string",
   //     inputs: ['run', 'face'],
-  //     outputs: ['nur', 'ecaf'],
+  //     answers: ['nur', 'ecaf'],
   //     startingCode: "var reverse = function() {}"
   //   }
   // ]);
@@ -49,8 +49,15 @@ angular.module('coderace.factories', [])
 
   factory.getData = function(index){
     factory.dataRef.child("Challenges").child(index).on("value", function(snapshot) {
-      var obj = snapshot.val();
+      var data = snapshot.val();
       $rootScope.$broadcast('Race:ready', snapshot.val());
+    });
+  }
+  
+  factory.getLength = function(){
+    factory.dataRef.child("Challenges").on("value", function(snapshot) {
+      var challenge = snapshot.val();
+      $rootScope.$broadcast('GotLength', challenge.length);
     });
   }
 
