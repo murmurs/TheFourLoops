@@ -1,6 +1,5 @@
 angular.module('coderace.test', [])
   .controller('testController', ['$scope', 'Race', "$firebaseArray", function($scope, Race, $firebaseArray){
-    var childRef = Race.dataRef.child('Challenges/');
     Race.getLength();
 
     $scope.$on('GotLength', function(event, data){
