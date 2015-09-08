@@ -4,6 +4,8 @@ angular.module('coderace.test', [])
     var dataRef = new Firebase('https://popping-heat-272.firebaseio.com/');
     var childRef = dataRef.child('Challenges');
 
+    $scope.tests = $firebaseArray(childRef);
+    
     $scope.send = function(){
       $scope.tests.$add({
           Name: $scope.nameContent,
