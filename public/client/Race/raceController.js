@@ -3,7 +3,6 @@ angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, Race, socket){
   // codemirror options
-  Race.getData();
   
   $scope.editorOptions = {
       lineWrapping : true,
@@ -30,11 +29,19 @@ angular.module('coderace.race', ['ui.codemirror'])
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
 
-  var random = getRandomArbitrary(0, Race.question.length);//random is between 0 and the number of questions
-  
-  $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
+  var random = getRandomArbitrary(0, 2);//random is between 0 and the number of questions
+  // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
+  // $scope.question = Race.question[random];
 
-  $scope.question = Race.question[random];
+  Race.getData(random);
+
+  $scope.$on('Race:ready', function (event, data) {
+    //$scope.$apply();
+    console.log("race ready!"); // expected to be raceReady!
+    $scope.code = data.Start;
+    $scope.question = data.Question;
+    $scope.$apply();
+  });
 
   $scope.evaluate = function(code) {
 
