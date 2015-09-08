@@ -1,4 +1,5 @@
 angular.module('coderace.test', [])
+
   .controller('testController', ['$scope', 'Race', function($scope, Race){
     var chalRef = Race.dataRef.child('Challenges');
 
