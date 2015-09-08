@@ -69,10 +69,10 @@ angular.module('coderace.race', ['ui.codemirror'])
       
       var workerComplete = false;
 
+      //if the input from the form is invalid, this worker will trigger.
       evalWorker.onerror = function(error) {
         evalWorker.terminate();
         workerComplete = true;
-        console.log("worker errored! - ", error.message);
         var codeResponse = {
           valid: false,
           error: error.message
