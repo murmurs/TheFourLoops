@@ -27,6 +27,13 @@ io.on('connection', function (socket) {
     }
   });
 
+  socket.on('problem', function(data){
+    /*  relay problem statement to slave  */
+    this.rooms.forEach(function(room){
+      this.to(room).emit('problem', data);
+    }.bind(this));
+  });
+
   socket.on('typing', function(data){
     /*  
     route typing inputs to relevant rooms 
@@ -93,6 +100,8 @@ var pair = function(room, player1, player2, callback){
     if(err){
       console.log(err);
     }
+    io.to(player1.id).emit('master');
+    // io.to(player2.id).emit('slave');
     player2.join(room, function(err){
       if(err){
         console.log(err);
@@ -136,7 +145,7 @@ var checkPlayerRooms = function(){
           if(err){
             console.log(err);
           }
-          // logRooms();
+          io.sockets.to('lonelySockets').emit('lonelySockets');
         });
       });
 

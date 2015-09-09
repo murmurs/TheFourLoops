@@ -1,9 +1,10 @@
 
 angular.module('coderace.race', ['ui.codemirror'])
 
-.controller('raceController', function ($scope, Race, socket){
-  
+.controller('raceController', function ($scope, $rootScope, Race, socket){
+  var master = false;
   $scope.room = false;
+  $scope.lonelySockets = false;
   // codemirror options
   
   $scope.editorOptions = {
@@ -34,8 +35,6 @@ angular.module('coderace.race', ['ui.codemirror'])
   var random = getRandomArbitrary(0, 2);//random is between 0 and the number of questions
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
-
-  Race.getData(random);
 
   var challengeInputs;
 
@@ -133,4 +132,21 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.room = room;
   });
 
+  socket.on('master', function(){
+    master = true;
+    Race.getData(random, function(problem){
+      socket.emit('problem', problem);
+    });
+  });
+
+  socket.on('lonelySockets', function(){
+    $scope.lonelySockets = true;
+  });
+
+  socket.on('problem', function(problem){
+    setTimeout(function(){
+      Race.setProblem(problem);
+    }, 0, problem);
+  });
 });
+
