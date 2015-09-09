@@ -35,7 +35,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
 
-  Race.getData(random);
+  Race.getData(2);
 
   var challengeInputs;
 
@@ -57,6 +57,8 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.evaluate = function(code) {
 
+    console.log("Code!", code);
+
     console.log("evaluating");
 
     var renderCodeResponse = function(codeResponse) {
@@ -69,11 +71,13 @@ angular.module('coderace.race', ['ui.codemirror'])
     };
   
     //the worker will not be able to access the factory directly.
-    //data must be passed to the worker.
     if (window.Worker) { //verify that the browser has worker capability.
       var evalWorker = new Worker("client/evalWorker.js");
+
+      angular.extend(challengeInputs, {code: code}); //add the code to the challenge inputs.
+
       evalWorker.postMessage(challengeInputs);
-      
+
       var workerComplete = false;
 
       //if the input from the form is invalid, this worker will trigger.
@@ -85,6 +89,7 @@ angular.module('coderace.race', ['ui.codemirror'])
           error: error.message
         };
         renderCodeResponse(codeResponse);
+        console.log("worker errored!!", error);
       };
 
       evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
@@ -100,7 +105,7 @@ angular.module('coderace.race', ['ui.codemirror'])
           evalWorker.terminate(); //terminate the worker.
           renderCodeResponse({
             valid: false,
-            error: "Taking longer than 5 seconds."
+            error: "Code is taking longer than 5 seconds to process"
           });
           //create a response for the timeout issues;
         }
