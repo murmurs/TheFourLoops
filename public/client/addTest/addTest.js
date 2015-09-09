@@ -1,5 +1,5 @@
 angular.module('coderace.test', [])
-  .controller('testController', ['$scope', 'Race', "$firebaseArray", function($scope, Race, $firebaseArray){
+  .controller('testController', ['$scope', 'Race', function($scope, Race){
     Race.getLength();
 
     $scope.$on('GotLength', function(event, data){
