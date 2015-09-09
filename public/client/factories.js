@@ -56,9 +56,9 @@ angular.module('coderace.factories', [])
   /*  called by master user, call to Firebase to get problem  */
   factory.getData = function(index, callback){
     factory.dataRef.child("Challenges").child(index).on("value", function(snapshot) {
-      $rootScope.problem = snapshot.val();
-      $rootScope.$broadcast('Race:ready', $rootScope.problem);
-      callback($rootScope.problem);// send slave the problem
+      var problem = snapshot.val();
+      $rootScope.$broadcast('Race:ready', problem);
+      callback(problem);// send slave the problem
     });
   };
   

@@ -11,7 +11,7 @@ angular.module('coderace.test', [])
             question: $scope.questionContent,
             inputs: JSON.parse($scope.inputContent),
             answers: JSON.parse($scope.outputContent),
-            startCode: $scope.startContent
+            startingCode: $scope.startContent
           }
         );
         $scope.nameContent = "";
