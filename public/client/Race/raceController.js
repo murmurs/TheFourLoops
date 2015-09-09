@@ -36,7 +36,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
 
-  Race.getData(1);
+  Race.getData(2);
 
   var challengeInputs;
 
