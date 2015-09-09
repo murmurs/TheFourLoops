@@ -32,11 +32,9 @@ angular.module('coderace.race', ['ui.codemirror'])
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
 
-  var random = getRandomArbitrary(0, 2);//random is between 0 and the number of questions
+  var random = getRandomArbitrary(0, 4);//random is between 0 and the number of questions
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
-
-  Race.getData(2);
 
   var challengeInputs;
 
