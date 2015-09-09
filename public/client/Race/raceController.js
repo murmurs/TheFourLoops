@@ -43,7 +43,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.$on('Race:ready', function (event, data) {
     console.log("race ready!"); // expected to be raceReady!
-    
+    console.log(data);
     $scope.code = data.startingCode;
     $scope.question = data.question;
     $scope.$apply();
