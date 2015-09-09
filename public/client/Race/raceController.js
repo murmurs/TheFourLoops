@@ -32,7 +32,7 @@ angular.module('coderace.race', ['ui.codemirror'])
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
 
-  var random = getRandomArbitrary(0, 4);//random is between 0 and the number of questions
+  // var random = getRandomArbitrary(0, Race.count+1);//random is between 0 and the number of questions
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
 
@@ -137,10 +137,15 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   socket.on('master', function(){
     master = true;
-    Race.getData(random, function(problem){
-      socket.emit('problem', problem);
+    Race.getLength();
+    $scope.$on('GotLength', function(event,data){
+      var random = getRandomArbitrary(0, data);
+      Race.getData(random, function(problem){
+        socket.emit('problem', problem);
+      });
     });
   });
+
 
   socket.on('lonelySockets', function(){
     $scope.lonelySockets = true;
