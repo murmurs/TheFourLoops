@@ -36,6 +36,8 @@ angular.module('coderace.race', ['ui.codemirror'])
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
 
+  Race.getData(1);
+
   var challengeInputs;
 
   $scope.dataLoaded = false;
@@ -63,8 +65,10 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.dataLoaded = true; //set this to true to stop the spinner.
       
       $scope.validResponse = codeResponse.valid;
+      $scope.error = codeResponse.error;
       $scope.tests = codeResponse.tests;
       $scope.passed = codeResponse.passed;
+      $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
       $scope.$apply();
     };
   
@@ -84,7 +88,8 @@ angular.module('coderace.race', ['ui.codemirror'])
         workerComplete = true;
         var codeResponse = {
           valid: false,
-          error: error.message
+          error: error.message,
+          passed: false
         };
         renderCodeResponse(codeResponse);
         console.log("worker errored!!", error);
@@ -103,7 +108,8 @@ angular.module('coderace.race', ['ui.codemirror'])
           evalWorker.terminate(); //terminate the worker.
           renderCodeResponse({
             valid: false,
-            error: "Code is taking longer than 5 seconds to process"
+            error: "Code is taking longer than 5 seconds to process",
+            passed: false
           });
           //create a response for the timeout issues;
         }

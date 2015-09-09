@@ -12,3 +12,111 @@ html, body, section, .full-height {
 h4, button{
   display: inline;
 }
+
+/* Modal Response Header Styles*/
+#header-response {
+  display: block;
+}
+
+
+#check-icon {
+  margin-left:12px;
+  display: block;
+}
+
+
+.modal-header {
+  text-align:center;
+}
+
+#spin-loader {
+  color: gray;
+}
+
+/*Modal Response Body Styles*/
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.modal-body {
+  color: gray;
+}
+
+.response-text {
+  float: left;
+  width: 8em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.comment-text {
+  padding-left: 3em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.border-left {
+  border-left: 1px solid gray;
+  float: left;
+}
+
+#valid-response {
+  display: block;
+  border: 1px solid gray;
+  padding-left:3em;
+}
+
+#tests-response {
+  width: 80%;
+  margin: auto;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.test {
+  border:1px solid gray;
+  padding-top:10px;
+  padding-bottom:10px;
+}
+
+.test-input {
+  width: 33%;
+  text-align: center;
+  float: left;
+}
+
+.test-headers {
+  font-size: 14px;
+  color: black;
+  text-align: center;
+}
+
+.test-header {
+  float: left;
+  padding: 5px;
+  width: 33%;
+}
+
+/*end of modal styling*/
+
+
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
+
