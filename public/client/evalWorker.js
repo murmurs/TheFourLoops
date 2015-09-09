@@ -4,6 +4,7 @@ onmessage = function(e) {
 
   var evaluateTests = function(challengeFunction, inputs, answers) {
     var responseArr = [];
+    console.log("tests started");
     for (var i=0; i<inputs.length; i++){
       var functionResponse = challengeFunction(inputs[i]);
       var testResponse = {
@@ -11,24 +12,31 @@ onmessage = function(e) {
         answer: answers[i],
         functionResponse: functionResponse
       };
+      console.log("testing input");
 
+      responseArr.push(testResponse);
       console.log(testResponse);
       if (functionResponse === answers[i]){ //if the function processes the input to the expected, and answer is correct.
         testResponse.valid = true;
       }
       else {
         testResponse.valid = false;
-        return responseArr; //the response testing will end when an invalid test is found.
+        console.log("test failed!");
+        break; //break out of the for loop so the testing does not continue.
       }
-      responseArr.push(testResponse);
     }
-    console.log(responseArr);
+    console.log("testingArr complete", responseArr[0]);
     return responseArr; //all tests are valid, so return.
   };
 
   var codeProcess = function(functionName, inputs, answers){ //determine the text response.
-    var challengeFunction = eval(functionName); //turn the functionName text into an actual function.
+    //console.log(functionName, typeof functionName);
+    var challengeFunction = eval(functionName);
+    console.log("top of codeprocess");
+    console.log(challengeFunction);
+    
     if (typeof challengeFunction === "function"){
+      console.log("function is correctly a function");
       var codeResponse = {
         valid: true,
         error: undefined,
@@ -41,6 +49,8 @@ onmessage = function(e) {
         error: functionName + " should be a function"
       }
     }
+
+    console.log("tests complete", codeResponse);
     if (codeResponse.tests[codeResponse.tests.length-1].valid === true) {
       codeResponse.passed = true;
     }
