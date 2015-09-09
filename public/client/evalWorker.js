@@ -7,24 +7,30 @@ onmessage = function(e) {
     console.log("tests started");
     for (var i=0; i<inputs.length; i++){
       var functionResponse = challengeFunction(inputs[i]);
+      console.log("functionResponse", functionResponse);
       var testResponse = {
         input: inputs[i],
         answer: answers[i],
         functionResponse: functionResponse
       };
       console.log("testing input");
-
-      responseArr.push(testResponse);
       console.log(testResponse);
       if (functionResponse === answers[i]){ //if the function processes the input to the expected, and answer is correct.
         testResponse.valid = true;
+        responseArr.push(testResponse);
       }
       else {
+        if (functionResponse === undefined) {
+          testResponse.functionResponse = "undefined";
+        }
         testResponse.valid = false;
         console.log("test failed!");
+        responseArr.push(testResponse);
         break; //break out of the for loop so the testing does not continue.
       }
+
     }
+    
     console.log("testingArr complete", responseArr[0]);
     return responseArr; //all tests are valid, so return.
   };
@@ -39,14 +45,15 @@ onmessage = function(e) {
       console.log("function is correctly a function");
       var codeResponse = {
         valid: true,
-        error: undefined,
+        error: "The submitted code has no syntax or timeout errors",
         tests: evaluateTests(challengeFunction, inputs, answers)
       }
     }
     else {
       var codeResponse = {
         valid: false,
-        error: functionName + " should be a function"
+        error: functionName + " should be a function",
+        tests: []
       }
     }
 
