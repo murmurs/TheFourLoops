@@ -3,30 +3,30 @@ angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, $rootScope, Race, socket){
   var master = false;
-  $scope.room = false;
+  $scope.room = false; 
   $scope.lonelySockets = false;
-  // codemirror options
   
+  // codemirror 
   $scope.editorOptions = {
-      lineWrapping : true,
-      lineNumbers: true,
-      theme: 'cobalt',
-      mode: 'javascript',
-      keymap: 'sublime',
-      autofocus: true
+    mode: 'javascript',
+    theme: 'cobalt',
+    lineNumbers: true,
+    lineWrapping: true,
+    showCursorWhenSelecting: true,
+    autofocus: true,
+    keyMap: 'sublime',
+    autoCloseBrackets: true,
+    tabSize: 2,
+    extraKeys: {"Ctrl-Space": "autocomplete"},
+    gutters: ['CodeMirror-lint-markers'],
+    lint: true
   };
 
-  var textArea = document.getElementById('opponentEditor');
+  function autocomplete(){
+    CodeMirror.showHint({hint: CodeMirror.hint.anyword});
+  }
 
-  // var myCodeMirror = CodeMirror.fromTextArea(textArea);
-  // codemirror opponent editor
-  // var editor = new CodeMirror(CodeMirror.replace("#opponentEditor"), {
-  //   parserfile: ["http://codemirror.net/1/js/tokenizejavascript.js", 
-  //   "http://codemirror.net/1/js/parsejavascript.js"],
-  //   path: "../codemirror/",
-  //   stylesheet: "../../css/jscolors.css",
-  //   content: document.getElementById("opponentEditor").value
-  // });
+  
 
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -36,7 +36,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
   // $scope.question = Race.question[random];
 
-  Race.getData(1);
+  // Race.getData(1);
 
   var challengeInputs;
 
