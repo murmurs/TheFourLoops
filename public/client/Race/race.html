@@ -23,10 +23,15 @@
         </div>
       </div>
       <div class="col-xs-6">
-        <h4>Opponent Progress:</h4><br/>
+        <h4>Opponent Progress:</h4>
+          <div ng-if="lonelySockets">
+            <h4>Opponent left</h4>
+          </div>
+        <br/>
         <div id='opponent'>
           <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
           <!-- <ui-codemirror='{ onLoad: opponentEditor }' id='opponentEditor'>{{competitorCode}}</ui-codemirror> -->
+
         </div>
       </div>
     </div>

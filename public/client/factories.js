@@ -26,6 +26,7 @@ angular.module('coderace.factories', [])
 
 .factory('Race', function ($rootScope) {
   var factory = {};
+  // var problem = null;
 
   factory.dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
 
@@ -46,21 +47,29 @@ angular.module('coderace.factories', [])
   //   }
   // ]);
 
+  /*  called by slave user  */
+  factory.setProblem = function(data){
+    $rootScope.problem = data;
+    $rootScope.$broadcast('Race:ready', $rootScope.problem);
+  };
 
-  factory.getData = function(index){
+  /*  called by master user, call to Firebase to get problem  */
+  factory.getData = function(index, callback){
     factory.dataRef.child("Challenges").child(index).on("value", function(snapshot) {
-      var data = snapshot.val();
-      $rootScope.$broadcast('Race:ready', snapshot.val());
+      $rootScope.problem = snapshot.val();
+      $rootScope.$broadcast('Race:ready', $rootScope.problem);
+      callback($rootScope.problem);// send slave the problem
     });
-  }
+  };
   
   factory.getLength = function(){
     factory.dataRef.child("Challenges").on("value", function(snapshot) {
-      var challenge = snapshot.val();
-      $rootScope.$broadcast('GotLength', challenge.length);
+      var challenges = snapshot.val();
+      $rootScope.$broadcast('GotLength', challenges.length);
     });
-  }
+  };
 
   return factory;
 
 });
+
