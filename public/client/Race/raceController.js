@@ -33,6 +33,7 @@ angular.module('coderace.race', ['ui.codemirror'])
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
 
+
   var challengeInputs;
 
   $scope.dataLoaded = false;
