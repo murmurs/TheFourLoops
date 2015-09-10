@@ -5,6 +5,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   var master = false;
   $scope.room = false;
   $scope.opponentLeft = false;
+  $scope.username = Race.username;
   // codemirror options
   
   // codemirror 
@@ -118,8 +119,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.typing = function(code){
     socket.emit('typing', {
-      code: code,
-      userId: userId
+      code: code
     });
   };
 
@@ -144,8 +144,10 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.competitorCode = data.code; 
   });
 
-  socket.on('roomJoined', function(room){
-    $scope.room = room;
+  socket.on('roomJoined', function(matchData){
+    $scope.room = matchData.room;
+    $scope.opponent = master ? 
+      matchData.player2: matchData.player1;
   });
 
   socket.on('master', function(){

@@ -27,15 +27,13 @@
       
       <br/>
       <div class="col-xs-6">
-        <h4>Your Code Here</h4>
+        <h4>{{username}}</h4>
         <ui-codemirror ng-model="code" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
         <button ng-click="evaluate(code)" class="btn-primary" data-toggle="modal" data-target="#myModal">Submit Code</button>
       </div>
       <div class="col-xs-6">
-        <h4>Opponent Progress:</h4>
-          <div ng-if="opponentLeft">
-            <h4>Opponent left</h4>
-          </div>
+        <h4>{{opponent}}</h4>
+        <h4 class="opponentLeft" ng-if="opponentLeft">has left</h4>
         <br/>
         <div id='opponent'>
           <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>

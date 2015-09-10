@@ -27,15 +27,16 @@ io.on('connection', function (socket) {
   });
 
   socket.on('start', function(data){
+    
     socket.username = data.username;
-    console.log(socket.id, ' username set to:', data.username);
+
     socket.join('waitingRoom', function(err){
       if(err){
         console.log(err)
       }else{
         /*  check the wiating room for other players */
         checkWaitingRoom();
-        logRooms();
+        // logRooms();
       }
     });
   });
@@ -69,8 +70,8 @@ var checkWaitingRoom = function(){
   var waitingSockets = Object.keys(io.sockets.adapter.rooms.waitingRoom);
 
   if( waitingSockets.length > 1){
-    console.log(waitingSockets.length, ' sockets waiting');
-    var room = roomCount.toString();
+    /*  add prefix so coding rooms can be filtered later  */
+    var room = 'codeRoom' + roomCount.toString();
     roomCount++;
 
     var player1 = io.of('/').connected[
@@ -84,10 +85,10 @@ var checkWaitingRoom = function(){
       /*  remit roomJoined to all members, possibly for start  */
       io.sockets.to(room).emit('roomJoined', {
         id:room,
-        player1:player1.id,
-        player2:player2.id
+        player1:player1.username,
+        player2:player2.username
       });
-      logRooms();
+      // logRooms();
     });
   }else{
     // logRooms();
@@ -120,6 +121,7 @@ var pair = function(room, player1, player2, callback){
               if(err){
                 console.error(err);
               }else{
+                // logRooms();
                 callback(room, player1, player2);
               }
             });
@@ -133,17 +135,20 @@ var pair = function(room, player1, player2, callback){
 var checkPlayerRooms = function(){
   /*  get list of all rooms */
   var rooms = Object.keys(io.sockets.adapter.rooms);
-
+  
   for(var i = 0; i < rooms.length; i++){
-    var clients = Object.keys(io.nsps['/'].adapter.rooms[rooms[i]]);
+    /*  only check coding rooms, not socket default rooms */
+    if(/codeRoom/.test(rooms[i])){
+    
+      var clients = Object.keys(io.nsps['/'].adapter.rooms[rooms[i]]);
 
-    if(clients.length < 2 && (rooms[i] !== 'waitingRoom')){
-      /* found a room with a single socket */
-        console.log(rooms[i], 'opponent left');
-        io.sockets.to(rooms[i]).emit('opponentLeft');
+      if( clients.length < 2 && (rooms[i] !== 'waitingRoom') ){
+        /* found a room with a single socket */
+          io.sockets.to(rooms[i]).emit('opponentLeft');
 
       }
     }
+  }
 };
 
 var logRooms = function(){
