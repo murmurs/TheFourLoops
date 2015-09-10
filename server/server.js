@@ -18,20 +18,26 @@ var roomCount = 0;// number of rooms so we can make new rooms
 
 io.on('connection', function (socket) {
   /* new socket (user) joins waiting room */
-  socket.join('waitingRoom', function(err){
-    if(err){
-      console.log(err)
-    }else{
-      /*  check the wiating room for other players */
-      checkWaitingRoom();
-    }
-  });
 
   socket.on('problem', function(data){
     /*  relay problem statement to slave  */
     this.rooms.forEach(function(room){
       this.to(room).emit('problem', data);
     }.bind(this));
+  });
+
+  socket.on('start', function(data){
+    socket.username = data.username;
+    console.log(socket.id, ' username set to:', data.username);
+    socket.join('waitingRoom', function(err){
+      if(err){
+        console.log(err)
+      }else{
+        /*  check the wiating room for other players */
+        checkWaitingRoom();
+        logRooms();
+      }
+    });
   });
 
   socket.on('typing', function(data){
@@ -63,7 +69,7 @@ var checkWaitingRoom = function(){
   var waitingSockets = Object.keys(io.sockets.adapter.rooms.waitingRoom);
 
   if( waitingSockets.length > 1){
-
+    console.log(waitingSockets.length, ' sockets waiting');
     var room = roomCount.toString();
     roomCount++;
 
@@ -81,7 +87,7 @@ var checkWaitingRoom = function(){
         player1:player1.id,
         player2:player2.id
       });
-      // logRooms();
+      logRooms();
     });
   }else{
     // logRooms();
@@ -131,34 +137,20 @@ var checkPlayerRooms = function(){
   for(var i = 0; i < rooms.length; i++){
     var clients = Object.keys(io.nsps['/'].adapter.rooms[rooms[i]]);
 
-    if(clients.length < 2 && 
-        (rooms[i] !== 'waitingRoom' || rooms[i] !== 'lonelySockets')){
+    if(clients.length < 2 && (rooms[i] !== 'waitingRoom')){
       /* found a room with a single socket */
-      var lonelySocket = io.of('/').connected[clients[0]];
-      /*  leave the room (deletes room according to socket docs */
-      lonelySocket.leave(rooms[i], function(err){
-        if(err){
-          console.log(err);
-        }
-        /*  join lonelySockets room */
-        lonelySocket.join('lonelySockets', function(err){
-          if(err){
-            console.log(err);
-          }
-          io.sockets.to('lonelySockets').emit('lonelySockets');
-        });
-      });
+        console.log(rooms[i], 'opponent left');
+        io.sockets.to(rooms[i]).emit('opponentLeft');
 
+      }
     }
-  }
-
 };
 
 var logRooms = function(){
 
   console.log('============================================================');
   for(var socket in io.of('/').connected){
-    console.log('socket: ', socket, ' rooms :', io.of('/').connected[socket].rooms); 
+    console.log('socket.username: ', io.of('/').connected[socket].username,  ' rooms :', io.of('/').connected[socket].rooms); 
   }
   console.log('============================================================');
 };

@@ -20,13 +20,20 @@ angular.module('coderace.factories', [])
           }
         });
       });
+    },
+    disconnect: function(){
+      socket.disconnect();
+    },
+    connect: function(){
+      socket.connect();
     }
   };
 })
 
 .factory('Race', function ($rootScope) {
   var factory = {};
-  // var problem = null;
+  
+  factory.username;
 
   factory.dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
 
