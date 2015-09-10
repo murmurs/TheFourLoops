@@ -12,7 +12,9 @@ html, body, section, .full-height {
 h4, button{
   display: inline;
 }
-
+.opponentLeft {
+  color: red;
+}
 /* Modal Response Header Styles*/
 #header-response {
   display: block;

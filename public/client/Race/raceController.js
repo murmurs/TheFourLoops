@@ -3,8 +3,10 @@ angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, $rootScope, Race, socket){
   var master = false;
-  $scope.room = false; 
-  $scope.lonelySockets = false;
+  $scope.room = false;
+  $scope.opponentLeft = false;
+  $scope.username = Race.username;
+  // codemirror options
   
   // codemirror 
   $scope.editorOptions = {
@@ -115,24 +117,37 @@ angular.module('coderace.race', ['ui.codemirror'])
     }
   }
 
-  var userId;
-  socket.on('userId', function(data){
-    userId = data.userId
-  });
-
   $scope.typing = function(code){
     socket.emit('typing', {
-      code: code,
-      userId: userId
+      code: code
     });
   };
+
+  
+  $scope.$on('$destroy', function(){
+    socket.disconnect();
+  });
+
+  if(!socket.connected){
+    socket.connect();
+  }
+
+  socket.emit('start', {
+    username:Race.username
+  });
+  
+  socket.on('opponentLeft', function(){
+    $scope.opponentLeft = true;
+  });
 
   socket.on('typing', function(data) {
     $scope.competitorCode = data.code; 
   });
 
-  socket.on('roomJoined', function(room){
-    $scope.room = room;
+  socket.on('roomJoined', function(matchData){
+    $scope.room = matchData.room;
+    $scope.opponent = master ? 
+      matchData.player2: matchData.player1;
   });
 
   socket.on('master', function(){
@@ -144,11 +159,6 @@ angular.module('coderace.race', ['ui.codemirror'])
         socket.emit('problem', problem);
       });
     });
-  });
-
-
-  socket.on('lonelySockets', function(){
-    $scope.lonelySockets = true;
   });
 
   socket.on('problem', function(problem){
