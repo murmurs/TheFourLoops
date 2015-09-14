@@ -12,6 +12,14 @@ html, body, section, .full-height {
 h4, button{
   display: inline;
 }
+
+.logo {
+  position: relative;
+  top:-12px;
+  width:75px;
+  background-color: white;
+  border-radius: 3px
+}
 .opponentLeft {
   color: red;
 }
