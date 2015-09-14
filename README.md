@@ -9,7 +9,6 @@ Our goal was to create a better coding experience for everyone that is new to co
 We wanted it to be fun and innovative.
 
 At the same time, we wanted to try technologies that we never used before.
-<<<<<<< HEAD
 
 ##Amazing Features:
 
