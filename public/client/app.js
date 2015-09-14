@@ -1,5 +1,3 @@
-console.log("we're live with js & express!");
-
 angular.module('coderace', ['coderace.factories','coderace.race', 'ngRoute', 'coderace.start', 'coderace.test', 'ui.codemirror'])
 
 .config(function($routeProvider, $httpProvider){
