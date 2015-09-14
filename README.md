@@ -1,4 +1,4 @@
-#Js Derby: leading the revolution of code racing!
+#jsVS: leading the revolution of code racing!
 
 It's an app where a user competes with another user on who can finish solving the test question first. The primary goal is to get new developers to be comfortable with javascript while at the same time trying to make coding fun.
 
