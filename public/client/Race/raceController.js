@@ -3,35 +3,54 @@ angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, $rootScope, Race, socket){
   var master = false;
-  $scope.room = false;
+  $scope.room = false; // need to revert to false. only done for testing --- tito
   $scope.opponentLeft = false;
   $scope.opponentPassed = false;
   $scope.username = Race.username;
-  // codemirror options
   
-  // codemirror 
-  $scope.editorOptions = {
-    mode: 'javascript',
-    theme: 'cobalt',
-    lineNumbers: true,
-    lineWrapping: true,
-    showCursorWhenSelecting: true,
-    autofocus: true,
-    keyMap: 'sublime',
-    autoCloseBrackets: true,
-    tabSize: 2,
-    extraKeys: {"Ctrl-Space": "autocomplete"},
-    gutters: ['CodeMirror-lint-markers'],
-    lint: true
-  };
+  // countdown timer
+  function timer(){
+    $scope.counter = 5;
+    $scope.countComplete = true;
+    var countDown = setInterval(function() {
+    $scope.counter--;
+      $scope.$apply();
+      if($scope.counter === 0){
+        clearInterval(countDown);
+        $scope.countComplete = false;
+        $('#waitingOverlay').css('display', 'none');
+        codeMirror();
+      }
+    }, 1000);
+  }
 
-  function autocomplete(){
-    CodeMirror.showHint({hint: CodeMirror.hint.anyword});
+  function codeMirror(){
+    // codemirror options
+    $scope.editorOptions = {
+      mode: 'javascript',
+      theme: 'cobalt',
+      lineNumbers: true,
+      lineWrapping: true,
+      showCursorWhenSelecting: true,
+      autofocus: false,
+      keyMap: 'sublime',
+      autoCloseBrackets: true,
+      tabSize: 2,
+      extraKeys: {"Ctrl-Space": "autocomplete"},
+      gutters: ['CodeMirror-lint-markers'],
+      lint: true
+    };
+    // codemirror autocomplete
+    function autocomplete(){
+      CodeMirror.showHint({hint: CodeMirror.hint.anyword});
+    }
+    $scope.$apply();
   }
 
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
+
 
   var challengeInputs;
 
@@ -148,6 +167,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   })
   socket.on('roomJoined', function(matchData){
     $scope.room = matchData.room;
+    timer();
     $scope.opponent = master ? 
       matchData.player2: matchData.player1;
   });
