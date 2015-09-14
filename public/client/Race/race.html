@@ -34,6 +34,7 @@
       <div class="col-xs-6">
         <h4>{{opponent}}</h4>
         <h4 class="opponentLeft" ng-if="opponentLeft">has left</h4>
+        <h4 class="opponentPassed" ng-if="opponentPassed">is done!</h4>
         <br/>
         <div id='opponent'>
           <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>

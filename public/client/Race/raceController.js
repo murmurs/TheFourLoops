@@ -5,6 +5,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   var master = false;
   $scope.room = false;
   $scope.opponentLeft = false;
+  $scope.opponentPassed = false;
   $scope.username = Race.username;
   // codemirror options
   
@@ -28,8 +29,6 @@ angular.module('coderace.race', ['ui.codemirror'])
     CodeMirror.showHint({hint: CodeMirror.hint.anyword});
   }
 
-  
-
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
@@ -43,7 +42,6 @@ angular.module('coderace.race', ['ui.codemirror'])
   $scope.dataLoaded = false;
 
   $scope.$on('Race:ready', function (event, data) {
-    console.log("race ready!"); // expected to be raceReady!
     $scope.code = data.startingCode;
     $scope.question = data.question;
     $scope.$apply();
@@ -56,10 +54,6 @@ angular.module('coderace.race', ['ui.codemirror'])
   });
 
   $scope.evaluate = function(code) {
-
-    console.log("Code!", code);
-
-    console.log("evaluating");
 
     var renderCodeResponse = function(codeResponse) {
       $scope.dataLoaded = true; //set this to true to stop the spinner.
@@ -96,6 +90,9 @@ angular.module('coderace.race', ['ui.codemirror'])
       };
 
       evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
+        if(codeResponse.data.passed === true){
+          socket.emit('passed');
+        }
         workerComplete = true; //don't execute the timeout function.
         console.log("codeResponse in on", codeResponse.data);
         renderCodeResponse(codeResponse.data);
@@ -123,7 +120,6 @@ angular.module('coderace.race', ['ui.codemirror'])
     });
   };
 
-  
   $scope.$on('$destroy', function(){
     socket.disconnect();
   });
@@ -138,16 +134,20 @@ angular.module('coderace.race', ['ui.codemirror'])
   
   socket.on('opponentLeft', function(){
     $scope.opponentLeft = true;
-  })
-  .on('typing', function(data) {
+  });
+  socket.on('typing', function(data) {
     $scope.competitorCode = data.code; 
   })
-  .on('roomJoined', function(matchData){
+  socket.on('roomJoined', function(matchData){
     $scope.room = matchData.room;
     $scope.opponent = master ? 
       matchData.player2: matchData.player1;
-  })
-  .on('master', function(){
+  });
+  socket.on('passed', function(){
+    console.log('opponent passed');
+    $scope.opponentPassed = true;
+  });
+  socket.on('master', function(){
     master = true;
     Race.getLength();
     $scope.$on('GotLength', function(event,data){
@@ -156,8 +156,8 @@ angular.module('coderace.race', ['ui.codemirror'])
         socket.emit('problem', problem);
       });
     });
-  })
-  .on('problem', function(problem){
+  });
+  socket.on('problem', function(problem){
     setTimeout(function(){
       Race.setProblem(problem);
     }, 0, problem);

@@ -11,8 +11,6 @@ server.listen(port);
 app.use(express.static('public'));
 app.use(express.static('bower_components'));
 
-var userCount = 0;
-
 var roomCount = 0;// number of rooms so we can make new rooms
 
 io.on('connection', function (socket) {
@@ -26,9 +24,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('start', function(data){
-    
     socket.username = data.username;
-
     socket.join('waitingRoom', function(err){
       if(err){
         console.log(err)
@@ -53,6 +49,15 @@ io.on('connection', function (socket) {
     }.bind(this));
   });
 
+  socket.on('passed', function(){
+    /* player passed */
+    this.rooms.forEach(function(room){
+      if( room !== 'waitingRoom'){
+        this.to(room).emit('passed');
+      }
+    }.bind(this));
+  });
+
   socket.on('disconnect', function(){
     /*
     after socket disconnects, its room list is empty
@@ -61,7 +66,6 @@ io.on('connection', function (socket) {
     */
     checkPlayerRooms();
   });
-
 });
 
 var checkWaitingRoom = function(){
@@ -119,7 +123,6 @@ var pair = function(room, player1, player2, callback){
               if(err){
                 console.error(err);
               }else{
-                // logRooms();
                 callback(room, player1, player2);
               }
             });
@@ -132,25 +135,21 @@ var pair = function(room, player1, player2, callback){
 
 var checkPlayerRooms = function(){
   /*  get list of all rooms */
-  var rooms = Object.keys(io.sockets.adapter.rooms);
-  
+  var rooms = Object.keys(io.sockets.adapter.rooms); 
   for(var i = 0; i < rooms.length; i++){
     /*  only check coding rooms, not socket default rooms */
     if(/codeRoom/.test(rooms[i])){
-    
       var clients = Object.keys(io.nsps['/'].adapter.rooms[rooms[i]]);
-
       if( clients.length < 2 && (rooms[i] !== 'waitingRoom') ){
         /* found a room with a single socket */
           io.sockets.to(rooms[i]).emit('opponentLeft');
-
       }
     }
   }
 };
 
 var logRooms = function(){
-
+  /*  just a helper function for debugging, not that there would be any :) */
   console.log('============================================================');
   for(var socket in io.of('/').connected){
     console.log('socket.username: ', io.of('/').connected[socket].username,  ' rooms :', io.of('/').connected[socket].rooms); 
