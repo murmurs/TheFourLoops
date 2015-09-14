@@ -1,25 +1,7 @@
-<div class="navbar navbar-inverse navbar-static-top">
-  <div class="container">
-    <a href="#/" class="navbar-brand">
-      <image class="logo" src="/js_vs.png"/>
-    </a>
-    <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <div class="collapse navbar-collapse navHeaderCollapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#/">Home</a></li>
-        <li><a href="#/addTest">Add Some Test!</a></li>
-      </ul>
-    </div>
-  </div>
-</div> 
-
-<br /><br />
-<form>
-  <input type='text' placeholder="Username" ng-model="username"/>
-  <input type="button" value="Start" ng-click="start()" />
-</form>
-
+<h2 style="text-align:center; margin:auto; margin-top:10px; display:block; margin-bottom:40px; margin-top:40px;">Join a JavaScript code race now!</h2>
+<div id="starting-form">
+  <form>
+    <input id="input-username" type='text' class="form-control" placeholder="Enter Your Name" ng-model="username" style="margin-bottom: 20px;" />
+    <input class="btn btn-primary" id="start-race" type="button" value="Start Racing!" ng-click="start()" />
+  </form>
+</div>
