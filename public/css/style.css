@@ -15,6 +15,11 @@ h4, button{
 .opponentLeft {
   color: red;
 }
+
+.opponentPassed {
+  color:blue;
+}
+
 /* Modal Response Header Styles*/
 #header-response {
   display: block;
