@@ -217,4 +217,32 @@ h4, button{
 .clearfix { display: block; }
 /* close commented backslash hack */
 
+#waitingCountdown {
+  margin-top: 20px;
+  font-size: 120px;
+  display: none;
+}
+
+.lead{
+  margin-bottom: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  margin-top: 20%;
+}
+#waitingOverlay{
+  background: rgba(0,0,0,0.85);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+  color: #FFF;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.counter{
+  font-size: 200px;
+}
 
