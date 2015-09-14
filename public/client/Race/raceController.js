@@ -138,19 +138,16 @@ angular.module('coderace.race', ['ui.codemirror'])
   
   socket.on('opponentLeft', function(){
     $scope.opponentLeft = true;
-  });
-
-  socket.on('typing', function(data) {
+  })
+  .on('typing', function(data) {
     $scope.competitorCode = data.code; 
-  });
-
-  socket.on('roomJoined', function(matchData){
+  })
+  .on('roomJoined', function(matchData){
     $scope.room = matchData.room;
     $scope.opponent = master ? 
       matchData.player2: matchData.player1;
-  });
-
-  socket.on('master', function(){
+  })
+  .on('master', function(){
     master = true;
     Race.getLength();
     $scope.$on('GotLength', function(event,data){
@@ -159,9 +156,8 @@ angular.module('coderace.race', ['ui.codemirror'])
         socket.emit('problem', problem);
       });
     });
-  });
-
-  socket.on('problem', function(problem){
+  })
+  .on('problem', function(problem){
     setTimeout(function(){
       Race.setProblem(problem);
     }, 0, problem);

@@ -12,7 +12,6 @@ app.use(express.static('public'));
 app.use(express.static('bower_components'));
 
 var userCount = 0;
-var userIds = [];
 
 var roomCount = 0;// number of rooms so we can make new rooms
 
@@ -108,10 +107,9 @@ var pair = function(room, player1, player2, callback){
       console.log(err);
     }
     io.to(player1.id).emit('master');
-    // io.to(player2.id).emit('slave');
     player2.join(room, function(err){
       if(err){
-        console.log(err);
+        console.error(err);
       }else{
         player1.leave('waitingRoom', function(err){
           if(err){
