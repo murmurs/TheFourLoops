@@ -33,10 +33,6 @@ angular.module('coderace.race', ['ui.codemirror'])
     return Math.floor(Math.random() * (max - min) + min);
   }//generate a random number
 
-  // var random = getRandomArbitrary(0, Race.count+1);//random is between 0 and the number of questions
-  // $scope.code = Race.start[random]; //set a temp value to put in the text area. This needs to be abstracted.
-  // $scope.question = Race.question[random];
-
   var challengeInputs;
 
   $scope.dataLoaded = false;
@@ -44,8 +40,9 @@ angular.module('coderace.race', ['ui.codemirror'])
   $scope.$on('Race:ready', function (event, data) {
     $scope.code = data.startingCode;
     $scope.question = data.question;
+    $scope.functionName = data.functionName;
     $scope.$apply();
-    
+
     challengeInputs = {
       inputs: data.inputs,
       answers: data.answers,
@@ -64,6 +61,17 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.passed = codeResponse.passed;
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
       $scope.$apply();
+
+      //after the scope is pushed to the page, reset everything to undefined.
+
+      setTimeout(function() {
+        $scope.dataLoaded = false;
+        $scope.error = undefined;
+        $scope.tests = undefined;
+        $scope.passed = undefined;
+        $scope.responseText = undefined;
+      }, 500);
+      
     };
   
     //the worker will not be able to access the factory directly.

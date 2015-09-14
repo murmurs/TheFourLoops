@@ -4,7 +4,7 @@ html, body, section, .full-height {
 } 
 
 #opponentEditor{
-    min-height: 600px;
+    min-height: 300px;
     -webkit-filter: blur(5px);
     filter: blur(5px);
 }
@@ -26,6 +26,88 @@ h4, button{
 
 .opponentPassed {
   color:blue;
+
+.navbar {
+  margin-bottom: 5px;
+}
+
+/* Styles for main page */
+#starting-form {
+  display: block;
+  margin: auto;
+  width: 50%;
+}
+
+#input-username {
+  height: 50px;
+}
+
+#start-race {
+  display: block;
+  margin: auto;
+  margin-top: 15px;
+  height: 40px;
+  width: 40%;
+}
+
+#users-vs {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#users-vs h3 {
+  margin-top:10px;
+  float:left;
+  width:48%;
+  text-align:center;
+}
+
+#users-vs h4 {
+  margin-top:0px;
+  float:left;
+  width: 48%;
+  margin-left:52%;
+  text-align: center;
+}
+
+#users-vs img {
+  float: left;
+  width:4%;
+}
+
+#challenge-submit {
+  width: 50%;
+  padding: 15px;
+  margin:auto;  
+  margin-top: 10px;
+  display: block;
+}
+
+/* Race Controller Styles */
+
+#waiting-opponent h2 {
+  margin: auto;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+#challenge-question {
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  text-align: center;
+  font-style: italic;
+  font-size: 18px;
+  width: 40%;
+  margin: auto;
+  margin-top: 20px;
 }
 
 /* Modal Response Header Styles*/
