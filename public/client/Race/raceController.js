@@ -80,18 +80,15 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.passed = codeResponse.passed;
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
       $scope.$apply();
-
       //after the scope is pushed to the page, reset everything to undefined.
-
-      setTimeout(function() {
-        $scope.dataLoaded = false;
-        $scope.error = undefined;
-        $scope.tests = undefined;
-        $scope.passed = undefined;
-        $scope.responseText = undefined;
-      }, 500);
       
     };
+
+    $scope.dataLoaded = false;
+    $scope.error = undefined;
+    $scope.tests = undefined;
+    $scope.passed = undefined;
+    $scope.responseText = undefined;
   
     //the worker will not be able to access the factory directly.
     if (window.Worker) { //verify that the browser has worker capability.
@@ -113,7 +110,6 @@ angular.module('coderace.race', ['ui.codemirror'])
           passed: false
         };
         renderCodeResponse(codeResponse);
-        console.log("worker errored!!", error);
       };
 
       evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
@@ -121,14 +117,12 @@ angular.module('coderace.race', ['ui.codemirror'])
           socket.emit('passed');
         }
         workerComplete = true; //don't execute the timeout function.
-        console.log("codeResponse in on", codeResponse.data);
         renderCodeResponse(codeResponse.data);
       }
       
       //check for worker timeout.
       setTimeout(function() {
         if (workerComplete === false){ //the worker has not completed after 5 seconds.
-          console.log("taking longer than 5 seconds");
           evalWorker.terminate(); //terminate the worker.
           renderCodeResponse({
             valid: false,
@@ -172,7 +166,6 @@ angular.module('coderace.race', ['ui.codemirror'])
       matchData.player2: matchData.player1;
   });
   socket.on('passed', function(){
-    console.log('opponent passed');
     $scope.opponentPassed = true;
   });
   socket.on('master', function(){
