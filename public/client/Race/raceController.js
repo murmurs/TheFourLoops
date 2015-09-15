@@ -52,16 +52,17 @@ angular.module('coderace.race', ['ui.codemirror'])
   }//generate a random number
 
 
+//challengeInputs is set the in the outer scope so it can be used in $scope.evaluate.
   var challengeInputs;
 
-  $scope.dataLoaded = false;
-
+  //when the data is loaded in the factory, load the data in the html and set the challenge inputs.
   $scope.$on('Race:ready', function (event, data) {
     $scope.code = data.startingCode;
-    $scope.question = data.question;
+    $scope.question = data.question; 
     $scope.functionName = data.functionName;
-    $scope.$apply();
+    $scope.$apply(); //push the newly acquired data to the dom.
 
+    //set challenge inputs to be used later by the worker.
     challengeInputs = {
       inputs: data.inputs,
       answers: data.answers,
@@ -71,53 +72,56 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.evaluate = function(code) {
 
-    var renderCodeResponse = function(codeResponse) {
-      $scope.dataLoaded = true; //set this to true to stop the spinner.
-      
-      $scope.validResponse = codeResponse.valid;
-      $scope.error = codeResponse.error;
-      $scope.tests = codeResponse.tests;
-      $scope.passed = codeResponse.passed;
-      $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
-      $scope.$apply();
-      //after the scope is pushed to the page, reset everything to undefined.
-      
-    };
-
+    //When the user firsts click the submit button, set all values to their defaults, in case they are submitting on a second or third try, the wrong test results wont show up.
     $scope.dataLoaded = false;
     $scope.error = undefined;
     $scope.tests = undefined;
     $scope.passed = undefined;
     $scope.responseText = undefined;
+
+    //render the results from the worker in the dom.
+    var renderCodeResponse = function(codeResponse) {
+      $scope.dataLoaded = true; //set this to true to stop the spinner.
+      $scope.validResponse = codeResponse.valid;
+      $scope.error = codeResponse.error;
+      $scope.tests = codeResponse.tests;
+      $scope.passed = codeResponse.passed;
+      $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
+      $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
+    };
+
   
-    //the worker will not be able to access the factory directly.
+    //Execute the worker on the client side 
     if (window.Worker) { //verify that the browser has worker capability.
       var evalWorker = new Worker("client/evalWorker.js");
 
-      angular.extend(challengeInputs, {code: code}); //add the code to the challenge inputs.
+      angular.extend(challengeInputs, {code: code}); //use the extend function add the input code string to the challenge inputs.
 
+      //launch the worker with the challenge inputs.
       evalWorker.postMessage(challengeInputs);
 
+      //used to test for timeouts 5 seconds after the worker starts.
       var workerComplete = false;
 
-      //if the input from the form is invalid, this worker will trigger.
+      //if the code input by the user is invalid, this worker will trigger.
       evalWorker.onerror = function(error) {
-        evalWorker.terminate();
-        workerComplete = true;
-        var codeResponse = {
+        console.log(error);
+        evalWorker.terminate(); //kill the worker.
+        workerComplete = true; //the worker is done.
+        var codeResponse = { //the code is invalid. create response to send to the dom.
           valid: false,
           error: error.message,
           passed: false
         };
-        renderCodeResponse(codeResponse);
+        renderCodeResponse(codeResponse); //render the dom with the correct code response.
       };
 
-      evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the scope.
-        if(codeResponse.data.passed === true){
+      evalWorker.onmessage = function(codeResponse) { //when the worker sends back its response, update the dom.
+        if(codeResponse.data.passed === true){ //tell the opponent that this users code passed.
           socket.emit('passed');
         }
         workerComplete = true; //don't execute the timeout function.
-        renderCodeResponse(codeResponse.data);
+        renderCodeResponse(codeResponse.data); //pass the codeResponse object to the dom to be rendered.
       }
       
       //check for worker timeout.
@@ -129,7 +133,6 @@ angular.module('coderace.race', ['ui.codemirror'])
             error: "Code is taking longer than 5 seconds to process",
             passed: false
           });
-          //create a response for the timeout issues;
         }
       }, 5000);
     }
