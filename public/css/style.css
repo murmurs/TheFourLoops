@@ -3,12 +3,6 @@ html, body, section, .full-height {
     width: 100%;
 } 
 
-#opponentEditor{
-    min-height: 300px;
-    -webkit-filter: blur(5px);
-    filter: blur(5px);
-}
-
 h4, button{
   display: inline;
 }
@@ -80,8 +74,8 @@ h4, button{
 }
 
 #challenge-submit {
-  width: 50%;
-  padding: 15px;
+  width: 15%;
+  padding: 10px;
   margin:auto;  
   margin-top: 10px;
   display: block;
@@ -100,7 +94,13 @@ h4, button{
   border-radius: 5px;
 }
 
-#challenge-question {
+#opponentEditor{
+  min-height: 650px;
+  -webkit-filter: blur(5px);
+          filter: blur(5px);
+}
+
+/*#challenge-question {
   padding: 10px;
   border: 1px solid gray;
   border-radius: 5px;
@@ -111,7 +111,24 @@ h4, button{
   margin: auto;
   margin-top: 20px;
 }
+*/
+#container1{
+  position: absolute;
+  z-index: 1;
+  min-height: 100%;
+  min-width: 100%;
+}
 
+#container2{
+  position: absolute;
+  z-index: 2;
+  top: 100px;
+  left: 500px;
+}
+
+.col-xs-6{
+  width: 100%;
+}
 /* Modal Response Header Styles*/
 #header-response {
   display: block;
