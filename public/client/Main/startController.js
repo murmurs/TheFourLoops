@@ -12,7 +12,7 @@ angular.module('coderace.start', [])
     };
 
     $scope.facebookLogin = function(){
-        FB.login(function(){}, {scope: 'publish_actions'});
+        $location.path('/auth-facebook');
     }
 
   }]);
