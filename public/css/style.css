@@ -3,6 +3,10 @@ html, body, section, .full-height {
     width: 100%;
 } 
 
+body{
+  font-family: 'Permanent Marker', cursive;
+}
+
 h4, button{
   display: inline;
 }
@@ -74,7 +78,6 @@ h4, button{
   width:3%;
 }
 
-
 #challenge-submit {
   width: 105px;
   padding: 10px;
@@ -89,6 +92,13 @@ h4, button{
   margin-right: auto;
   width: 50%;
 }
+
+#facebookButton{
+  padding: 0px;
+  position: relative;
+  border: none;
+  background-color: white;
+  left: 35%;
 /* Race Controller Styles */
 
 #waiting-opponent h2 {
@@ -132,10 +142,6 @@ h4, button{
   z-index: 2;
   top: 100px;
   left: 500px;
-}
-
-.nav, .text-center{
-  font-family: 'Permanent Marker', cursive;
 }
 
 .col-xs-6{

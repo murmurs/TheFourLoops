@@ -11,5 +11,9 @@ angular.module('coderace.start', [])
 
     };
 
+    $scope.facebookLogin = function(){
+        FB.login(function(){}, {scope: 'publish_actions'});
+    }
+
   }]);
 
