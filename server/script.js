@@ -1,4 +1,4 @@
-//This is the script file that contains a working authentication (excluding the logout options) using passport.js on a normal situation.
+//This is the script file that contains a working authentication using passport.js on a normal situation.
 //Needs to be merged to the original server file
 
 var express = require('express');
