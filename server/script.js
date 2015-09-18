@@ -6,6 +6,7 @@ var app = express();
 var server = require('http').Server(app);
 var passport = require('passport');
 var session = require('express-session');
+var Cookies = require('cookies');
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 var port = 3000;
@@ -56,6 +57,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(Cookies.express());
 
 // GET /auth/facebook
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -80,6 +82,16 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
   res.redirect('/login');
 });
 
+//Needs some fixing
+app.get('/login', function(req, res){
+    res.cookies.set('userID', req.user.id, {
+      maxAge: 2628000000,   // expires in 1 month
+      httpOnly: false,    // more secure but then can't access from client
+    });
+    res.send();
+})
+
+//Logouts the user and destroys session. But still needs refurbishing
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
