@@ -1,5 +1,5 @@
 angular.module('coderace.start', [])
-  .controller('startController', ['$scope', '$location', 'socket', 'Race', function($scope, $location, socket, Race){
+  .controller('startController', ['$scope', '$http', 'socket', 'Race', function($scope, $http, socket, Race){
 
     $scope.username = Race.username;
     
@@ -10,10 +10,6 @@ angular.module('coderace.start', [])
       $location.path('/challenge');
 
     };
-
-    $scope.facebookLogin = function(){
-        $location.path('/auth-facebook');
-    }
 
   }]);
 
