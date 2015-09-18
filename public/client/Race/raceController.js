@@ -37,7 +37,8 @@ angular.module('coderace.race', ['ui.codemirror'])
       tabSize: 2,
       extraKeys: {"Ctrl-Space": "autocomplete"},
       gutters: ['CodeMirror-lint-markers'],
-      lint: true
+      lint: true,
+      scrollbarStyle: "null"
     };
     // codemirror autocomplete
     function autocomplete(){

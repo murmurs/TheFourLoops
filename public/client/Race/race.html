@@ -4,27 +4,32 @@
   </div>
   <div ng-switch-default>
     <div class='row'>
-      <h3 class="text-center">Challenge: {{ functionName }}</h3>
-      <div id="challenge-question">
-        {{ question }}
-      </div>
-      
-      <div id="users-vs" class="clearfix col-xs-12">
-        <h3>{{username}}</h3>
-        <img src="http://www.flexraid.com/wp-content/uploads/2013/10/Vs.pn_.png" style="float: left;" />
-        <h3>{{opponent}}</h3>
-        <h4 class="opponentLeft" ng-if="opponentLeft">left the game</h4>
-        <h4 class="opponentPassed" ng-if="opponentPassed">completed the challenge!</h4>
-      </div>
-      <div class="col-xs-6">
-        <ui-codemirror ng-model="code" class="clearfix" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
-        <button ng-click="evaluate(code)" class="btn-primary btn" id="challenge-submit" data-toggle="modal" data-target="#myModal" style="margin-bottom:30px;">Submit Code</button>
-      </div>
-      <div class="col-xs-6">
-        <div id='opponent'>
+        <div id='container1'>
           <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
         </div>
-      </div>
+        <div id='container2'>
+          <h3 class="text-center">Challenge: {{ question }}</h3>
+          <!-- <div id="challenge-question">
+            {{ question }}
+          </div> -->
+          
+          <div id="users-vs" class="clearfix col-xs-12">
+            <h3>{{username}} <img class='fightAnimation' src="img/stance/stance1.png" /></h3>
+            <img src="http://www.flexraid.com/wp-content/uploads/2013/10/Vs.pn_.png" style="float: left;" />
+            <h3>{{opponent}} <img class='fightAnimation' src="img/stance/stance2.png" /></h3>
+            <h4 class="opponentLeft" ng-if="opponentLeft">left the game</h4>
+            <h4 class="opponentPassed" ng-if="opponentPassed">completed the challenge!</h4>
+          </div>
+          <div class="col-xs-6">
+            <ui-codemirror ng-model="code" class="clearfix" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
+            <button ng-click="evaluate(code)" class="btn-primary btn" id="challenge-submit" data-toggle="modal" data-target="#myModal" style="margin-bottom:30px;">Submit Code</button>
+          </div>
+         <!--  <div class="col-xs-6">
+            <div id='opponent'>
+              <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
+            </div>
+          </div> -->
+        </div>
     </div>
 
     <div id="myModal" class="modal fade" role="dialog">
