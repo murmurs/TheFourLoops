@@ -1,4 +1,3 @@
-
 angular.module('coderace.race', ['ui.codemirror'])
 
 .controller('raceController', function ($scope, $rootScope, Race, socket){
@@ -28,7 +27,7 @@ angular.module('coderace.race', ['ui.codemirror'])
     // codemirror options
     $scope.editorOptions = {
       mode: 'javascript',
-      theme: 'cobalt',
+      theme: '3024-night',
       lineNumbers: true,
       lineWrapping: true,
       showCursorWhenSelecting: true,
@@ -187,4 +186,5 @@ angular.module('coderace.race', ['ui.codemirror'])
     }, 0, problem);
   });
 });
+
 
