@@ -6,7 +6,21 @@ angular.module('coderace.race', ['ui.codemirror'])
   $scope.opponentLeft = false;
   $scope.opponentPassed = false;
   $scope.username = Race.username;
-  
+
+  var getCookies = function(){
+    var pairs = document.cookie.split(";");
+    var cookies = {};
+    for (var i=0; i<pairs.length; i++){
+      pairs
+      var pair = pairs[i].trim().split("=");
+      cookies[pair[0]] = unescape(pair[1]);
+    }
+    return cookies;
+  }
+
+  var cookies = getCookies();
+  var facebookId = document.facebookId = cookies.userID;
+
   // countdown timer
   function timer(){
     $scope.counter = 5;
@@ -140,7 +154,8 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.typing = function(code){
     socket.emit('typing', {
-      code: code
+      code: code,
+      facebookId: facebookId,
     });
   };
 

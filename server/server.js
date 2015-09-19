@@ -8,6 +8,8 @@ var session = require('express-session');
 var Cookies = require('cookies');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var FirebaseStore = require('connect-firebase')(session); //Will still check if this is needed
+var firebase = new Firebase('https://codefighter.firebaseio.com/');
+
 
 var port = process.env.PORT || 3000;
 
@@ -159,6 +161,23 @@ io.on('connection', function (socket) {
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
+
+        console.log(room.slice(0,8));
+        if(room.slice(0,8) === 'codeRoom') {  // Switch To Delimiter - over 10 rooms etc.
+
+          var matchRefUrl = room.slice(8);
+          // console.log('maaaaaaaaaatchID', matchId);
+          console.log('roooooooooooooom', matchRefUrl);
+          console.log('roooooooooooooom', room);
+          console.log('dataaaaaaaaaaaaa', data);
+          var matchRef = new Firebase(matchRefUrl);
+          var typingState = matchRef.push();
+
+          data.timestamp = Date.now();
+          // data.room = room;
+          typingState.update(data);
+        }
+
       }
     }.bind(this));
   });
@@ -183,13 +202,15 @@ io.on('connection', function (socket) {
 });
 
 var checkWaitingRoom = function(){
-  
+
   var waitingSockets = Object.keys(io.sockets.adapter.rooms.waitingRoom);
 
   if( waitingSockets.length > 1){
     /*  add prefix so coding rooms can be filtered later  */
-    var room = 'codeRoom' + roomCount.toString();
-    roomCount++;
+    var matchId = firebase.child('Matches').push();
+    matchId.set({'player1': 'empty', 'player2': 'empty'})
+    console.log('waiting room matchID', matchId.toString())
+    var room = 'codeRoom' + matchId;
 
     var player1 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[0]
