@@ -1,5 +1,27 @@
-<h2 style="text-align:center; margin:auto; margin-top:10px; display:block; margin-bottom:40px; margin-top:40px;">Start a code fight!</h2>
+<div ng-switch="authenticate()">
+  <div ng-switch-when="false">
+    <h2 style="text-align:center; margin:auto; margin-top:10px; display:block; margin-bottom:40px; margin-top:40px; font-size:xx-large">Start a code fight!</h2>
 
-<!-- change href once deployed -->
-<a ng-href="http://localhost:3000/auth-facebook" id="facebookButton" ><img src="login-facebook.png"/></a>
+    <!-- change href once deployed -->
+    <a style="text-align:center; margin:auto; margin-top:10px; display:block;" ng-href="http://localhost:3000/auth-facebook" id="facebookButton" ><img src="login-facebook.png"/></a>
+  </div>
+  <div ng-switch-default>
+    <div id="profileView">
+      <div>{{username}}</div>
+      <div id="fbPicture">
+        Add Facebook Picture Here!
+      </div>
+    </div>
+    <div id="challengeInfo">
+      <div> CHALLENGE STATS
+        <div id='statsHolder'>
+        </div>
+        <p>should contain the average time for each challenge</p>
+        <p>should contain the win to lose ratio</p>
+        <p>should be able to playback past matches</p>
+      </div>
+    </div>
+    <button ng-click="start()">Challenge Button</button>
+  </div>
+</div>
 

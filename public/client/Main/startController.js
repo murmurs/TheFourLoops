@@ -1,15 +1,19 @@
 angular.module('coderace.start', [])
-  .controller('startController', ['$scope', '$http', 'socket', 'Race', function($scope, $http, socket, Race){
+  .controller('startController', ['$scope', '$location', 'socket', 'Race', function($scope, $location, socket, Race){
 
-    $scope.username = Race.username;
+    $scope.username = 'Fighters user handle';
     
     $scope.start = function(){
       socket.connect();
       socket.emit('username', $scope.username);
-      Race.username = $scope.username;
+      // Race.username = $scope.username;
       $location.path('/challenge');
-
     };
+
+    $scope.authenticate = function(){
+      if(!document.cookie) return false;
+      return true
+    }
 
   }]);
 

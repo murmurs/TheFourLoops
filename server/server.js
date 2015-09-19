@@ -88,7 +88,7 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
        httpOnly: false,    // more secure but then can't access from client
      });
   // Successful authentication, redirect home.
-  res.redirect('/profile');
+  res.redirect('/');
 });
 
 //Needs some fixing
@@ -98,8 +98,10 @@ app.get('/profile', function(req, res){
 
 //Logouts the user and destroys session. But still needs refurbishing
 app.get('/logout', function(req, res){
+
   req.session.destroy();
   req.session = null;
+
   req.logout();
   // res.clearCookie('connect.sid'); //Should I destroy this aswell?
   res.clearCookie('userID');
