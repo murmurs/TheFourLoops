@@ -38,10 +38,10 @@ angular.module('coderace.factories', [])
 
 .factory('Race', function ($rootScope) {
   var factory = {};
-  
+
   factory.username;
 
-  factory.dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
+  factory.dataRef = new Firebase("https://codefighter.firebaseio.com/");
 
   /*  called by slave user  */
   factory.setProblem = function(data){
