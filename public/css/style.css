@@ -1,17 +1,25 @@
 html, body, section, .full-height {
     height: 100%;
     width: 100%;
-} 
+}
 
-#opponentEditor{
-    min-height: 600px;
-    -webkit-filter: blur(5px);
-    filter: blur(5px);
+body{
+  font-family: 'Permanent Marker', cursive;
 }
 
 h4, button{
   display: inline;
 }
+
+.logo {
+  position: relative;
+  top:-10px;
+  left: -300px;
+  width:70px;
+  background-color: white;
+  border-radius: 3px
+}
+
 .opponentLeft {
   color: red;
 }
@@ -20,6 +28,142 @@ h4, button{
   color:blue;
 }
 
+.navbar {
+  margin-bottom: 5px;
+}
+.navbar-right{
+  margin-right: 15px;
+}
+
+/* Styles for main page */
+#starting-form {
+  display: block;
+  margin: auto;
+  width: 50%;
+}
+
+#input-username {
+  height: 50px;
+}
+
+#start-race {
+  display: block;
+  margin: auto;
+  margin-top: 15px;
+  height: 40px;
+  width: 40%;
+}
+
+#users-vs {
+  font-family: 'Gloria Hallelujah', cursive;
+  display: block;
+  width: 100%;
+  height: 300px;
+ /* margin-top: 5px;
+  margin-bottom: 5px;*/
+}
+
+#users-vs h3 {
+  /*margin-top:10px;*/
+  float:left;
+  width:48%;
+  text-align:center;
+}
+
+#users-vs h4 {
+  margin-top:0px;
+  float:left;
+  width: 48%;
+  margin-left:52%;
+  text-align: center;
+}
+
+#challenge-submit {
+  width: 105px;
+  padding: 10px;
+  margin:auto;
+  margin-top: 10px;
+  display: block;
+}
+
+
+#facebookButton{
+  padding: 0px;
+  position: relative;
+  border: none;
+  background-color: white;
+}
+/* Race Controller Styles */
+
+#waiting-opponent h2 {
+  margin: auto;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+#opponentEditor{
+  color: red;
+  padding-right: 0;
+  min-height: 650px;
+  -webkit-filter: blur(5px);
+          filter: blur(5px);
+}
+
+/*#challenge-question {
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  text-align: center;
+  font-style: italic;
+  font-size: 18px;
+  width: 40%;
+  margin: auto;
+  margin-top: 20px;
+}
+*/
+#container1{
+  position: absolute;
+  z-index: 1;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+#container2{
+  z-index: 2;
+}
+
+/*.nav, .text-center{
+  font-family: 'Permanent Marker', cursive;
+}
+*/
+.fightAnimation1 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 150%;
+  position: relative;
+  top: -25px;
+  left: -50px;
+}
+.fightAnimation2 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transform: rotateY(180deg);
+  width: 150%;
+  position: relative;
+  top: -25px;
+  left: -50px;
+}
+
+.col-xs-6{
+  width: 100%;
+}
 /* Modal Response Header Styles*/
 #header-response {
   display: block;
@@ -126,4 +270,68 @@ h4, button{
 .clearfix { display: block; }
 /* close commented backslash hack */
 
+#waitingCountdown {
+  margin-top: 20px;
+  font-size: 120px;
+  display: none;
+}
 
+.lead{
+  margin-bottom: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  margin-top: 20%;
+}
+#waitingOverlay{
+  background: rgba(0,0,0,0.85);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+  color: #FFF;
+  font-size: 14px;
+  line-height: 20px;
+  z-index: 4;
+}
+
+.counter{
+  font-size: 200px;
+}
+
+#versusLogo {
+  display: block;
+  margin: auto;
+  width: 6%;
+}
+
+#player-vs-player-animation {
+  position: relative;
+  top: -80px;
+}
+
+#player-vs-player-info {
+  position:relative;
+  left: 30px;
+}
+
+#player-character {
+  position:relative;
+  left: -25px;
+}
+#opponent-character  {
+  position:relative;
+  left: -30px;
+}
+
+.container-fluid {
+  padding-left:0;
+  padding-right:0;
+}
+
+.navbar-text a {
+  color: white;
+  position: relative;
+  left: 300px;
+}

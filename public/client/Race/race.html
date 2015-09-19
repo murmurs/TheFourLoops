@@ -1,100 +1,110 @@
-<div class="navbar navbar-inverse navbar-static-top">
-  <div class="container">
-    <a href="#/" class="navbar-brand">Js Derby</a>
-    <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <div class="collapse navbar-collapse navHeaderCollapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#/">Home</a></li>
-      </ul>
-    </div>
-  </div>
-</div> 
-
 <div ng-switch="room">
-  <div ng-switch-when="false">
-    <h2>Waiting for Opponent</h2>
+  <div id="waiting-opponent" ng-switch-when="false">
+    <h2>Waiting for new opponent...</h2>
   </div>
   <div ng-switch-default>
-    <div class='row' >
-      <h2 class="text-center">Challenge Problem</h2>
-      <div class="text-center">
-        {{ question }}
-      </div>
-      
-      <br/>
-      <div class="col-xs-6">
-        <h4>{{username}}</h4>
-        <ui-codemirror ng-model="code" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
-        <button ng-click="evaluate(code)" class="btn-primary" data-toggle="modal" data-target="#myModal">Submit Code</button>
-      </div>
-      <div class="col-xs-6">
-        <h4>{{opponent}}</h4>
-        <h4 class="opponentLeft" ng-if="opponentLeft">has left</h4>
-        <h4 class="opponentPassed" ng-if="opponentPassed">is done!</h4>
-        <br/>
-        <div id='opponent'>
+    <div class='row'>
+        <div id='container1'>
           <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
         </div>
-      </div>
+        <div id='container2' class="col-xs-8 pull-right">
+          <div style="height:80px;width:100%;font-size:150%; overflow:scroll; padding:5px 0 5px 0; "class="text-center">Challenge: {{ question }}</div>
+          <div id="users-vs" class=" clearfix col-xs-12">
+            <div id="player-vs-player-info" class="col-xs-12 text-center">
+              <div id="player-name" class="col-xs-4 row"><h3 style="float: none; margin: 0 auto"><!-- {{username}} --> Joel</h3></div>
+              <div class="col-xs-4">
+                <img id='versusLogo'src="http://www.flexraid.com/wp-content/uploads/2013/10/Vs.pn_.png"/>
+              </div>
+              <div id="opponent-name" class="col-xs-4 row"><h3 style="float: none; margin: 0 auto"><!-- {{opponent}} --> Uche</h3></div>
+            </div>
+            <div id="player-vs-player-animation" class="col-xs-12">
+              <div id="player-character" class="col-xs-4">
+                <img class='fightAnimation1' src="img/stance/stance1.png" />
+              </div>
+              <div id="opponent-character" class="col-xs-4 col-xs-offset-4">
+                <img class='fightAnimation2' src="img/stance/stance2.png" />
+              </div>
+            </div>
+            <h4 class="opponentLeft" ng-if="opponentLeft">left the game</h4>
+            <h4 class="opponentPassed" ng-if="opponentPassed">completed the challenge!</h4>
+          </div>
+
+
+          <div class="col-xs-6">
+            <ui-codemirror ng-model="code" class="clearfix" ng-change="typing(code)" ui-codemirror-opts="editorOptions">{{code}}</ui-codemirror>
+            <button ng-click="evaluate(code)" class="btn-primary btn" id="challenge-submit" data-toggle="modal" data-target="#myModal" style="margin-bottom:30px;">Submit Code</button>
+          </div>
+
+         <!--  <div class="col-xs-6">
+            <div id='opponent'>
+              <textarea id='opponentEditor' class="col-xs-6 full-height" ui-codemirror-opts="editorOptions">{{competitorCode}}</textarea>
+            </div>
+          </div> -->
+        </div>
     </div>
 
     <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-          <div ng-if="!dataLoaded" id="spin-loader">
-            <i class="fa fa-spinner fa-spin fa-5x"></i>
-          </div>
-
-          <div ng-if="dataLoaded" ng-class="passed ? 'green' : 'red'">
-            <div id="check-icon">
-              <i ng-class="passed ? 'fa fa-check-circle-o fa-5x' : 'fa fa-times-circle-o fa-5x'"></i>
+            <div ng-if="!dataLoaded" id="spin-loader">
+              <i class="fa fa-spinner fa-spin fa-5x"></i>
             </div>
-            <div id="header-response">{{responseText}}</div>
-          </div>
 
-        </div>
-        <div class="modal-body" ng-if="dataLoaded">
-        
-          <div id="valid-response"  class="clearfix"> 
-            <div class="response-text">
-              {{validResponse ? 'Valid' : 'Invalid'}} input.
+            <div ng-if="dataLoaded" ng-class="passed ? 'green' : 'red'">
+              <div id="check-icon">
+                <i ng-class="passed ? 'fa fa-check-circle-o fa-5x' : 'fa fa-times-circle-o fa-5x'"></i>
+              </div>
+              <div id="header-response">{{responseText}}</div>
             </div>
-            <div class="border-left">
-              <div class="comment-text" ng-class="validResponse ? 'green' : 'red'" >
-                {{error}}
+
+          </div>
+          <div class="modal-body" ng-if="dataLoaded">
+
+            <div id="valid-response"  class="clearfix">
+              <div class="response-text">
+                {{validResponse ? 'Valid' : 'Invalid'}} input.
+              </div>
+              <div class="border-left">
+                <div class="comment-text" ng-class="validResponse ? 'green' : 'red'" >
+                  {{error}}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div id="tests-response" ng-if="validResponse">
-            <h3>Tests</h3>
-            <div class="test-headers clearfix">
-              <div class="test-header">Input</div>
-              <div class="test-header">Expected Output</div>
-              <div class="test-header">Actual Output</div>
+            <div id="tests-response" ng-if="validResponse">
+              <h3>Tests</h3>
+              <div class="test-headers clearfix">
+                <div class="test-header">Input</div>
+                <div class="test-header">Expected Output</div>
+                <div class="test-header">Actual Output</div>
+              </div>
+
+              <div class="test clearfix" ng-repeat="(index, value) in tests">
+                <div class="test-input"> {{value.input}} </div>
+                <div class="test-input"> {{value.answer}} </div>
+                <div class="test-input" ng-class="value.valid ? 'green' : 'red'"> {{value.functionResponse}} </div>
+              </div>
+
             </div>
-
-            <div class="test clearfix" ng-repeat="(index, value) in tests">
-              <div class="test-input"> {{value.input}} </div>
-              <div class="test-input"> {{value.answer}} </div>
-              <div class="test-input" ng-class="value.valid ? 'green' : 'red'"> {{value.functionResponse}} </div>
-            </div>
-
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
+    <div id="waitingOverlay" ng-if='countComplete'>
+      <p class="lead">Your race will begin momentarily...</p>
+      <h2 class="counter">
+          {{counter}}
+      </h2>
+      <h2 id="waitingCountdown" class="lead">Go!</h2>
     </div>
   </div>
+
+
 </div>
