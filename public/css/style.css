@@ -1,7 +1,7 @@
 html, body, section, .full-height {
     height: 100%;
     width: 100%;
-} 
+}
 
 body{
   font-family: 'Permanent Marker', cursive;
@@ -14,6 +14,7 @@ h4, button{
 .logo {
   position: relative;
   top:-10px;
+  left: -300px;
   width:70px;
   background-color: white;
   border-radius: 3px
@@ -29,6 +30,9 @@ h4, button{
 
 .navbar {
   margin-bottom: 5px;
+}
+.navbar-right{
+  margin-right: 15px;
 }
 
 /* Styles for main page */
@@ -54,6 +58,7 @@ h4, button{
   font-family: 'Gloria Hallelujah', cursive;
   display: block;
   width: 100%;
+  height: 300px;
  /* margin-top: 5px;
   margin-bottom: 5px;*/
 }
@@ -73,16 +78,10 @@ h4, button{
   text-align: center;
 }
 
-#users-vs img {
-  float: left;
-  width:3%;
-}
-
-
 #challenge-submit {
   width: 105px;
   padding: 10px;
-  margin:auto;  
+  margin:auto;
   margin-top: 10px;
   display: block;
 }
@@ -109,6 +108,7 @@ h4, button{
 
 #opponentEditor{
   color: red;
+  padding-right: 0;
   min-height: 650px;
   -webkit-filter: blur(5px);
           filter: blur(5px);
@@ -134,22 +134,31 @@ h4, button{
 }
 
 #container2{
-  position: absolute;
   z-index: 2;
-  top: 50px;
-  left: 500px;
 }
 
 /*.nav, .text-center{
   font-family: 'Permanent Marker', cursive;
 }
 */
-.fightAnimation {
+.fightAnimation1 {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 45%;
-  height: 200px;
+  width: 150%;
+  position: relative;
+  top: -25px;
+  left: -50px;
+}
+.fightAnimation2 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transform: rotateY(180deg);
+  width: 150%;
+  position: relative;
+  top: -25px;
+  left: -50px;
 }
 
 .col-xs-6{
@@ -289,4 +298,40 @@ h4, button{
 
 .counter{
   font-size: 200px;
+}
+
+#versusLogo {
+  display: block;
+  margin: auto;
+  width: 6%;
+}
+
+#player-vs-player-animation {
+  position: relative;
+  top: -80px;
+}
+
+#player-vs-player-info {
+  position:relative;
+  left: 30px;
+}
+
+#player-character {
+  position:relative;
+  left: -25px;
+}
+#opponent-character  {
+  position:relative;
+  left: -30px;
+}
+
+.container-fluid {
+  padding-left:0;
+  padding-right:0;
+}
+
+.navbar-text a {
+  color: white;
+  position: relative;
+  left: 300px;
 }
