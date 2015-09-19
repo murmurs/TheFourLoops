@@ -14,20 +14,26 @@
   <link rel="stylesheet" href="style.css">
   <link href='https://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
-  <link rel="shortcut icon" href="favicon.ico"/>
+
+  <link rel="shortcut icon" href="favicon1.png"/>
 </head>
 <body class="container-fluid" oncopy="return false" oncut="return false" onpaste="return false">
   <canvas id="sakura"></canvas>
 
-  <!-- Need to put everything inside class btnbg so the canvas would be the background and gets pushed to the back -->
-  <div class="btnbg">
-    <div class="navbar navbar-inverse navbar-static-top">
-      <div class="container">
-        <a href="#/" class="navbar-brand">
-          <image class="logo" src="js_vs.png"/>
-        </a>
-        <ul class="navbar-text navbar-right">
-          <a href="#/addTest">Add A New Test</a>
+  <div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+      <a href="#/" class="navbar-brand">
+        <image class="logo" src="codefighter-logo.png" style="height:30px; width:150px;"/>
+      </a>
+      <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse navHeaderCollapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#/addTest">Add A New Test</a></li>
+
         </ul>
       </div>
     </div>

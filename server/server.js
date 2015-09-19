@@ -86,7 +86,7 @@ app.get('/auth-facebook',
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/logout' }), function(req, res) {
   //Successful authentication, sets cookies
      res.cookies.set('userID', req.user.id, {
-       maxAge: 2628000000,   // expires in 1 month
+       maxAge: 86400000,   // expires in 1 month
        httpOnly: false,    // more secure but then can't access from client
      });
   // Successful authentication, redirect home.
