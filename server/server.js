@@ -162,10 +162,10 @@ io.on('connection', function (socket) {
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
 
-        console.log(room.slice(0,8));
-        if(room.slice(0,8) === 'codeRoom') {  // Switch To Delimiter - over 10 rooms etc.
+        roomMatch = room.split(' ');
+        if(roomMatch[0] === 'codeRoom') {
 
-          var matchRefUrl = room.slice(8);
+          var matchRefUrl = roomMatch[1];
           // console.log('maaaaaaaaaatchID', matchId);
           console.log('roooooooooooooom', matchRefUrl);
           console.log('roooooooooooooom', room);
@@ -216,7 +216,7 @@ var checkWaitingRoom = function(){
       'winnerId': 'empty',
     })
     console.log('waiting room matchID', matchId.toString())
-    var room = 'codeRoom' + matchId;
+    var room = 'codeRoom ' + matchId;
 
     var player1 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[0]
