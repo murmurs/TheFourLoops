@@ -171,7 +171,8 @@ io.on('connection', function (socket) {
           console.log('roooooooooooooom', room);
           console.log('dataaaaaaaaaaaaa', data);
           var matchRef = new Firebase(matchRefUrl);
-          var typingState = matchRef.push();
+          var playerRef = matchRef.child('players/' + data.facebookId)
+          var typingState = playerRef.push();
 
           data.timestamp = Date.now();
           // data.room = room;
@@ -208,7 +209,12 @@ var checkWaitingRoom = function(){
   if( waitingSockets.length > 1){
     /*  add prefix so coding rooms can be filtered later  */
     var matchId = firebase.child('Matches').push();
-    matchId.set({'player1': 'empty', 'player2': 'empty'})
+    matchId.set({
+      'startTime': Date.now(),
+      'endTime': 'empty',
+      'challengeId': 'empty',
+      'winnerId': 'empty',
+    })
     console.log('waiting room matchID', matchId.toString())
     var room = 'codeRoom' + matchId;
 
