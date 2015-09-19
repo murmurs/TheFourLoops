@@ -193,8 +193,16 @@ angular.module('coderace.race', ['ui.codemirror'])
     master = true;
     Race.getLength();
     $scope.$on('GotLength', function(event,data){
-      var random = getRandomArbitrary(0, data);
-      Race.getData(random, function(problem){
+      var challengesObject;
+      Race.dataRef.child('Challenges').on('value', function(snapshot){
+        challengesObject = snapshot.val();
+      });
+
+      challengeIdsArray = Object.keys(challengesObject);
+      var randomIndex = getRandomArbitrary(0, challengeIdsArray.length);
+      console.log(challengeIdsArray)
+
+      Race.getData(challengeIdsArray[randomIndex], function(problem){
         socket.emit('problem', problem);
       });
     });

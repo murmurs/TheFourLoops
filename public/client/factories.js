@@ -57,11 +57,11 @@ angular.module('coderace.factories', [])
       callback(problem);// send slave the problem
     });
   };
-  
+
   factory.getLength = function(){
     factory.dataRef.child("Challenges").on("value", function(snapshot) {
       var challenges = snapshot.val();
-      $rootScope.$broadcast('GotLength', challenges.length);
+      $rootScope.$broadcast('GotLength');
     });
   };
 
