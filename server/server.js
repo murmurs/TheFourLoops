@@ -7,8 +7,24 @@ var passport = require('passport');
 var session = require('express-session');
 var Cookies = require('cookies');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var FirebaseStore = require('connect-firebase')(session); //Will still check if this is needed
 
 var port = process.env.PORT || 3000;
+
+app.use(express.static('public'));
+app.use(express.static('bower_components'));
+app.use(session({ 
+  secret: 'My Glorious God, The Murmur God!',
+  store: new FirebaseStore({ 
+    host : 'codefighter.firebaseio.com',
+    reapInterval : 10000
+  }),
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(Cookies.express());
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -47,16 +63,6 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-//All these are needed for passport (ALL)
-app.use(session({ 
-  secret: 'My Glorious God, The Murmur God!',
-  resave: false,
-  saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(Cookies.express());
-
 // GET /auth/facebook
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in Facebook authentication will involve
@@ -75,12 +81,12 @@ app.get('/auth-facebook',
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/logout' }), function(req, res) {
   //Successful authentication, sets cookies
-    res.cookies.set('userID', req.user.id, {
-      maxAge: 2628000000,   // expires in 1 month
-      httpOnly: false,    // more secure but then can't access from client
-    });
+     res.cookies.set('userID', req.user.id, {
+       maxAge: 2628000000,   // expires in 1 month
+       httpOnly: false,    // more secure but then can't access from client
+     });
   // Successful authentication, redirect home.
   res.redirect('/profile');
 });
@@ -92,7 +98,11 @@ app.get('/profile', function(req, res){
 
 //Logouts the user and destroys session. But still needs refurbishing
 app.get('/logout', function(req, res){
+  req.session.destroy();
+  req.session = null;
   req.logout();
+  // res.clearCookie('connect.sid'); //Should I destroy this aswell?
+  res.clearCookie('userID');
   res.redirect('/');
 });
 
@@ -110,8 +120,7 @@ function ensureAuthenticated(req, res, next) {
 
 /////////////////Anything below here is original and unchanged///////////////////////////
 
-app.use(express.static('public'));
-app.use(express.static('bower_components'));
+
 
 
 var roomCount = 0;// number of rooms so we can make new rooms
