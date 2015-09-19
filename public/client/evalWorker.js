@@ -8,7 +8,7 @@ onmessage = function(e) {
 
     //if the target function exists in the users code, the users function will be assigned to challengeFunction.
     var challengeFunction = eval(e.data.functionName);
-    
+
     if (typeof challengeFunction === "function"){ //since eval was run previously, if a function with the target functionName exists, then the user submitted a valid function with the correct name.
       var codeResponse = {
         valid: true,
@@ -35,7 +35,10 @@ onmessage = function(e) {
 
   //this instantiates all JS written by the user. If any of it errors, it will be caught by the on error event in the controller.
   //it also sets all of the variables written in the users code into environment variables set in this scope, which will be used in the codeProcess function.
-  eval(e.data.code); 
+  eval(e.data.code);
 
   //if the evals are successful the code will continue and codeProcess will be run.
   var codeResponse = codeProcess(e.data.functionName, e.data.inputs, e.data.answers);
+
+  postMessage(codeResponse);
+}
