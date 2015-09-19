@@ -174,6 +174,7 @@ io.on('connection', function (socket) {
           var playerRef = matchRef.child('players/' + data.facebookId)
           var typingState = playerRef.push();
 
+          matchRef.update({'startTime': data.startTime});
           data.timestamp = Date.now();
           // data.room = room;
           typingState.update(data);

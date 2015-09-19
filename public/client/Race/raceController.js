@@ -20,6 +20,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   var cookies = getCookies();
   var facebookId = document.facebookId = cookies.userID;
+  var startTime;
 
   // countdown timer
   function timer(){
@@ -33,6 +34,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         $scope.countComplete = false;
         $('#waitingOverlay').css('display', 'none');
         codeMirror();
+        startTime = Date.now();
       }
     }, 1000);
   }
@@ -156,6 +158,7 @@ angular.module('coderace.race', ['ui.codemirror'])
     socket.emit('typing', {
       code: code,
       facebookId: facebookId,
+      startTime: startTime,
     });
   };
 
