@@ -21,6 +21,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   var cookies = getCookies();
   var facebookId = document.facebookId = cookies.userID;
   var startTime;
+  var challengeId;
 
   // countdown timer
   function timer(){
@@ -167,6 +168,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       code: code,
       facebookId: facebookId,
       startTime: startTime,
+      challengeId: challengeId,
     });
   };
 
@@ -211,6 +213,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       console.log(challengeIdsArray)
 
       Race.getData(challengeIdsArray[randomIndex], function(problem){
+        challengeId = challengeIdsArray[randomIndex];
         socket.emit('problem', problem);
       });
     });

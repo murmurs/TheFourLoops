@@ -187,6 +187,7 @@ io.on('connection', function (socket) {
           var typingState = playerRef.push();
 
           matchRef.update({'startTime': data.startTime});
+          matchRef.update({'challengeId': data.challengeId});
           data.timestamp = Date.now();
           // data.room = room;
           typingState.update(data);
