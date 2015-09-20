@@ -225,11 +225,13 @@ var checkWaitingRoom = function(){
     var player2 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[1]
       ];
-    
+
     pair(room, player1, player2, function(room){
       /*  remit roomJoined to all members, possibly for start  */
+      var roomMatch = room.split(' ');
+      var matchId = roomMatch[1].slice(-20);
       io.sockets.to(room).emit('roomJoined', {
-        id:room,
+        matchId: matchId,
         player1:player1.username,
         player2:player2.username
       });

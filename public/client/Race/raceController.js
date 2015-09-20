@@ -103,6 +103,13 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.tests = codeResponse.tests;
       $scope.passed = codeResponse.passed;
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
+      if(codeResponse.passed){
+        var matchId = $scope.room
+        Race.dataRef.child('Matches/' + matchId).update({
+          winnerId: facebookId,
+        })
+      }
+
       $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
     };
 
@@ -181,7 +188,7 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.competitorCode = data.code; 
   })
   socket.on('roomJoined', function(matchData){
-    $scope.room = matchData.room;
+    $scope.room = matchData.matchId;
     timer();
     $scope.opponent = master ? 
       matchData.player2: matchData.player1;
