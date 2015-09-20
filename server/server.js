@@ -8,6 +8,8 @@ var session = require('express-session');
 var Cookies = require('cookies');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var FirebaseStore = require('connect-firebase')(session); //Will still check if this is needed
+var firebase = new Firebase('https://codefighter.firebaseio.com/');
+
 
 var port = process.env.PORT || 3000;
 
@@ -159,6 +161,25 @@ io.on('connection', function (socket) {
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
+
+        roomMatch = room.split(' ');
+        if(roomMatch[0] === 'codeRoom') {
+
+          var matchRefUrl = roomMatch[1];
+          // console.log('maaaaaaaaaatchID', matchId);
+          console.log('roooooooooooooom', matchRefUrl);
+          console.log('roooooooooooooom', room);
+          console.log('dataaaaaaaaaaaaa', data);
+          var matchRef = new Firebase(matchRefUrl);
+          var playerRef = matchRef.child('players/' + data.facebookId)
+          var typingState = playerRef.push();
+
+          matchRef.update({'startTime': data.startTime});
+          data.timestamp = Date.now();
+          // data.room = room;
+          typingState.update(data);
+        }
+
       }
     }.bind(this));
   });
@@ -183,13 +204,20 @@ io.on('connection', function (socket) {
 });
 
 var checkWaitingRoom = function(){
-  
+
   var waitingSockets = Object.keys(io.sockets.adapter.rooms.waitingRoom);
 
   if( waitingSockets.length > 1){
     /*  add prefix so coding rooms can be filtered later  */
-    var room = 'codeRoom' + roomCount.toString();
-    roomCount++;
+    var matchId = firebase.child('Matches').push();
+    matchId.set({
+      'startTime': Date.now(),
+      'endTime': 'empty',
+      'challengeId': 'empty',
+      'winnerId': 'empty',
+    })
+    console.log('waiting room matchID', matchId.toString())
+    var room = 'codeRoom ' + matchId;
 
     var player1 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[0]
@@ -197,11 +225,13 @@ var checkWaitingRoom = function(){
     var player2 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[1]
       ];
-    
+
     pair(room, player1, player2, function(room){
       /*  remit roomJoined to all members, possibly for start  */
+      var roomMatch = room.split(' ');
+      var matchId = roomMatch[1].slice(-20);
       io.sockets.to(room).emit('roomJoined', {
-        id:room,
+        matchId: matchId,
         player1:player1.username,
         player2:player2.username
       });

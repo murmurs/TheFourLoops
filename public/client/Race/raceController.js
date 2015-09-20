@@ -6,7 +6,22 @@ angular.module('coderace.race', ['ui.codemirror'])
   $scope.opponentLeft = false;
   $scope.opponentPassed = false;
   $scope.username = Race.username;
-  
+
+  var getCookies = function(){
+    var pairs = document.cookie.split(";");
+    var cookies = {};
+    for (var i=0; i<pairs.length; i++){
+      pairs
+      var pair = pairs[i].trim().split("=");
+      cookies[pair[0]] = unescape(pair[1]);
+    }
+    return cookies;
+  }
+
+  var cookies = getCookies();
+  var facebookId = document.facebookId = cookies.userID;
+  var startTime;
+
   // countdown timer
   function timer(){
     $scope.counter = 5;
@@ -19,6 +34,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         $scope.countComplete = false;
         $('#waitingOverlay').css('display', 'none');
         codeMirror();
+        startTime = Date.now();
       }
     }, 1000);
   }
@@ -87,6 +103,13 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.tests = codeResponse.tests;
       $scope.passed = codeResponse.passed;
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
+      if(codeResponse.passed){
+        var matchId = $scope.room
+        Race.dataRef.child('Matches/' + matchId).update({
+          winnerId: facebookId,
+        })
+      }
+
       $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
     };
 
@@ -140,7 +163,9 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.typing = function(code){
     socket.emit('typing', {
-      code: code
+      code: code,
+      facebookId: facebookId,
+      startTime: startTime,
     });
   };
 
@@ -163,7 +188,7 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.competitorCode = data.code; 
   })
   socket.on('roomJoined', function(matchData){
-    $scope.room = matchData.room;
+    $scope.room = matchData.matchId;
     timer();
     $scope.opponent = master ? 
       matchData.player2: matchData.player1;
@@ -175,8 +200,16 @@ angular.module('coderace.race', ['ui.codemirror'])
     master = true;
     Race.getLength();
     $scope.$on('GotLength', function(event,data){
-      var random = getRandomArbitrary(0, data);
-      Race.getData(random, function(problem){
+      var challengesObject;
+      Race.dataRef.child('Challenges').on('value', function(snapshot){
+        challengesObject = snapshot.val();
+      });
+
+      challengeIdsArray = Object.keys(challengesObject);
+      var randomIndex = getRandomArbitrary(0, challengeIdsArray.length);
+      console.log(challengeIdsArray)
+
+      Race.getData(challengeIdsArray[randomIndex], function(problem){
         socket.emit('problem', problem);
       });
     });
