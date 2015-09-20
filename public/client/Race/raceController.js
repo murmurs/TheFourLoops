@@ -109,6 +109,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         var matchId = $scope.room
         Race.dataRef.child('Matches/' + matchId).update({
           winnerId: facebookId,
+          endTime: Date.now(),
         })
       }
 
