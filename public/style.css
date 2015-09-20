@@ -1,0 +1,15 @@
+body {
+    padding:0;
+    margin:0;
+    overflow:hidden; /* I need this so that i won't have the scroll bar*/
+	  height: 600px;   /* Still don't what this affects */
+}
+canvas {
+    padding:0;
+    margin:0;
+}
+div.btnbg {
+    position:fixed;
+    left:0;
+    top:0;
+}

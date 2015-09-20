@@ -100,10 +100,9 @@ app.get('/profile', function(req, res){
 
 //Logouts the user and destroys session. But still needs refurbishing
 app.get('/logout', function(req, res){
-
   req.session.destroy();
   req.session = null;
-
+  
   req.logout();
   // res.clearCookie('connect.sid'); //Should I destroy this aswell?
   res.clearCookie('userID');
