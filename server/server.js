@@ -91,7 +91,7 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
       httpOnly: false,    // more secure but then can't access from client
      });
      res.cookies.set('displayName', req.user.displayName, {
-      maxAge: 86400000,   // expires in 1 month
+      maxAge: 86400000,   // expires in 1 day(s)
       httpOnly: false,    // more secure but then can't access from client
      })
   // Successful authentication, redirect home.

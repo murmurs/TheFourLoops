@@ -3,7 +3,7 @@ angular.module('coderace.start', [])
 
     //this function parses our cookie for the profileName and 
     //saves it as our user name
-    $scope.parseCookie = function(cookie){
+    var parseCookie = function(cookie){
       cookie = cookie.split(';');
       var userName;
       for(var i=0; i<cookie.length; i++){
@@ -12,11 +12,10 @@ angular.module('coderace.start', [])
           userName = currentCookie[1];
         }
       }
-      console.log(userName);
       return userName;
     }
     
-    $scope.username = $scope.parseCookie(document.cookie); //Race.username
+    $scope.username = parseCookie(document.cookie); //Race.username
     
     $scope.start = function(){
       socket.connect();

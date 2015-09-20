@@ -19,20 +19,15 @@
 <body class="container-fluid" oncopy="return false" oncut="return false" onpaste="return false">
   <canvas id="sakura"></canvas>
 
-  <div class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
-      <a href="#/" class="navbar-brand">
-        <image class="logo" src="codefighter-logo.png" style="height:30px; width:150px;"/>
-      </a>
-      <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <div class="collapse navbar-collapse navHeaderCollapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#/addTest">Add A New Test</a></li>
-
+  <!-- Need to put everything inside class btnbg so the canvas would be the background and gets pushed to the back -->
+  <div class="btnbg">
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <a href="#/" class="navbar-brand">
+          <image class="logo" src="codefighter-logo.png"/>
+        </a>
+        <ul class="navbar-text navbar-right">
+          <a href="#/addTest">Add A New Test</a>
         </ul>
       </div>
     </div>
@@ -69,7 +64,6 @@
   <script src="client/Main/startController.js"></script>
   <script src="client/addTest/addTest.js"></script>
   <script src="client/Race/raceController.js"></script>
-<<<<<<< HEAD
   
   <!-- Everything below here is for flower power -->
   <script id="sakura_point_vsh" type="x-shader/x_vertex">
@@ -359,8 +353,5 @@
     </script>
     <!-- I don't know why, but this needs to be at the very bottom -->
     <script src="script.js"></script>
-=======
-
->>>>>>> [feat] add to username logic
 </body>
 </html>
