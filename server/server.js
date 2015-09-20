@@ -54,6 +54,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
+    //store whatever profile was grabbed from call to Facebook server
     process.nextTick(function () {
 
       // To keep the example simple, the user's Facebook profile is returned to
@@ -86,9 +87,13 @@ app.get('/auth-facebook',
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/logout' }), function(req, res) {
   //Successful authentication, sets cookies
      res.cookies.set('userID', req.user.id, {
-       maxAge: 2628000000,   // expires in 1 month
-       httpOnly: false,    // more secure but then can't access from client
+      maxAge: 86400000,   // expires in 1 month
+      httpOnly: false,    // more secure but then can't access from client
      });
+     res.cookies.set('displayName', req.user.displayName, {
+      maxAge: 86400000,   // expires in 1 day(s)
+      httpOnly: false,    // more secure but then can't access from client
+     })
   // Successful authentication, redirect home.
   res.redirect('/');
 });
@@ -130,6 +135,7 @@ var roomCount = 0;// number of rooms so we can make new rooms
 
 io.on('connection', function (socket) {
   /* new socket (user) joins waiting room */
+  
 
   socket.on('problem', function(data){
     /*  relay problem statement to slave  */
