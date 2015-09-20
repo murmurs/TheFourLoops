@@ -1,6 +1,5 @@
 angular.module('coderace.start', [])
   .controller('startController', ['$scope', '$location', 'socket', 'Race', function($scope, $location, socket, Race){
-
     $scope.username = 'Fighters user handle';
     $scope.start = function(){
       socket.connect();
