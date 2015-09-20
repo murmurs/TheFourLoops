@@ -211,15 +211,16 @@ angular.module('coderace.race', ['ui.codemirror'])
 
       challengeIdsArray = Object.keys(challengesObject);
       var randomIndex = getRandomArbitrary(0, challengeIdsArray.length);
-      console.log(challengeIdsArray)
 
       Race.getData(challengeIdsArray[randomIndex], function(problem){
         challengeId = challengeIdsArray[randomIndex];
+        problem.challengeId = challengeId
         socket.emit('problem', problem);
       });
     });
   });
   socket.on('problem', function(problem){
+    challengeId = problem.challengeId;
     setTimeout(function(){
       Race.setProblem(problem);
     }, 0, problem);
