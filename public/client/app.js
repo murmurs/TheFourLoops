@@ -14,10 +14,6 @@ angular.module('coderace', ['coderace.factories','coderace.race', 'ngRoute', 'co
     templateUrl: 'client/addTest/addTest.html',
     controller: 'testController'
   })
-  .when('/profile', {
-    templateUrl: 'client/profile/profile.html',
-    controller: 'profileController'
-  })
   .otherwise({
     redirectTo: '/'
   })
