@@ -97,6 +97,14 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.passed = undefined;
     $scope.responseText = undefined;
 
+    var storeMatchResults = function(){
+      var matchId = $scope.room
+      Race.dataRef.child('Matches/' + matchId).update({
+        winnerId: facebookId,
+        endTime: Date.now(),
+      })
+    }
+
     //render the results from the worker in the dom.
     var renderCodeResponse = function(codeResponse) {
       $scope.dataLoaded = true; //set this to true to stop the spinner.
@@ -106,11 +114,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.passed = codeResponse.passed;
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
       if(codeResponse.passed){
-        var matchId = $scope.room
-        Race.dataRef.child('Matches/' + matchId).update({
-          winnerId: facebookId,
-          endTime: Date.now(),
-        })
+        storeMatchResults();
       }
 
       $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
