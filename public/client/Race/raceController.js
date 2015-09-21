@@ -5,7 +5,6 @@ angular.module('coderace.race', ['ui.codemirror'])
   $scope.room = false; // need to revert to false. only done for testing --- tito
   $scope.opponentLeft = false;
   $scope.opponentPassed = false;
-  $scope.username = Race.username;
 
   var getCookies = function(){
     var pairs = document.cookie.split(";");
@@ -20,6 +19,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   var cookies = getCookies();
   var facebookId = document.facebookId = cookies.userID;
+  var facebookDisplayName = document.facebookDisplayName = cookies.displayName;
   var startTime;
   var challengeId;
 
@@ -76,7 +76,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   //when the data is loaded in the factory, load the data in the html and set the challenge inputs.
   $scope.$on('Race:ready', function (event, data) {
     $scope.code = data.startingCode;
-    $scope.question = data.question; 
+    $scope.question = data.question;
     $scope.functionName = data.functionName;
     $scope.$apply(); //push the newly acquired data to the dom.
 
@@ -209,7 +209,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   }
 
   socket.emit('start', {
-    username:Race.username
+    username: facebookDisplayName.split(' ')[0],
   });
   
   socket.on('opponentLeft', function(){
