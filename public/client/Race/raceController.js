@@ -44,6 +44,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         var matchRef = Race.dataRef.child('Matches/' + matchId);
         matchRef.update({'startTime': startTime});
         matchRef.update({'challengeId': challengeId});
+        socket.emit('ghostMatchBegin')
       }
     }, 1000);
   }
