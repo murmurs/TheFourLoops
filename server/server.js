@@ -3,18 +3,146 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var Firebase = require("firebase");
+var passport = require('passport');
+var session = require('express-session');
+var Cookies = require('cookies');
+var FacebookStrategy = require('passport-facebook').Strategy;
+var FirebaseStore = require('connect-firebase')(session); //Will still check if this is needed
+var firebase = new Firebase('https://codefighter.firebaseio.com/');
+
 
 var port = process.env.PORT || 3000;
 
-server.listen(port);
-
 app.use(express.static('public'));
 app.use(express.static('bower_components'));
+app.use(session({ 
+  secret: 'My Glorious God, The Murmur God!',
+  store: new FirebaseStore({ 
+    host : 'codefighter.firebaseio.com',
+    reapInterval : 10000
+  }),
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(Cookies.express());
+
+// Passport session setup.
+//   To support persistent login sessions, Passport needs to be able to
+//   serialize users into and deserialize users out of the session.  Typically,
+//   this will be as simple as storing the user ID when serializing, and finding
+//   the user by ID when deserializing.  However, since this example does not
+//   have a database of user records, the complete Facebook profile is serialized
+//   and deserialized.
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+// Use the FacebookStrategy within Passport.
+//   Strategies in Passport require a `verify` function, which accept
+//   credentials (in this case, an accessToken, refreshToken, and Facebook
+//   profile), and invoke a callback with a user object.
+passport.use(new FacebookStrategy({
+    clientID: '1727433694144167',
+    clientSecret: '2a9be8774548ba0803ba29e48adb1adf',
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    enableProof: false
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // asynchronous verification, for effect...
+    //store whatever profile was grabbed from call to Facebook server
+    process.nextTick(function () {
+
+      // To keep the example simple, the user's Facebook profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the Facebook account with a user record in your database,
+      // and return that user instead.
+      return done(null, profile);
+    });   
+  }
+));
+
+// GET /auth/facebook
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in Facebook authentication will involve
+//   redirecting the user to facebook.com.  After authorization, Facebook will
+//   redirect the user back to this application at /auth/facebook/callback
+app.get('/auth-facebook',
+  passport.authenticate('facebook'),
+  function(req, res){
+    // The request will be redirected to Facebook for authentication, so this
+    // function will not be called.
+  }
+);
+
+// GET /auth/facebook/callback
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which, in this example, will redirect the user to the home page.
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/logout' }), function(req, res) {
+  //Successful authentication, sets cookies
+     res.cookies.set('userID', req.user.id, {
+      maxAge: 86400000,   // expires in 1 month
+      httpOnly: false,    // more secure but then can't access from client
+     });
+     res.cookies.set('displayName', req.user.displayName, {
+      maxAge: 86400000,   // expires in 1 day(s)
+      httpOnly: false,    // more secure but then can't access from client
+     })
+  // Successful authentication, redirect home.
+  res.redirect('/');
+});
+
+//Needs some fixing
+app.get('/profile', function(req, res){
+    res.send();
+})
+
+//Logouts the user and destroys session. But still needs refurbishing
+app.get('/logout', function(req, res){
+  req.session.destroy();
+  req.session = null;
+  
+  req.logout();
+  // res.clearCookie('connect.sid'); //Should I destroy this aswell?
+  res.clearCookie('userID');
+  res.redirect('/');
+});
+
+server.listen(port);
+
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
+}
+
+/////////////////Anything below here is original and unchanged///////////////////////////
+
+
+
 
 var roomCount = 0;// number of rooms so we can make new rooms
 
 io.on('connection', function (socket) {
   /* new socket (user) joins waiting room */
+  
+  /* handles the animation */
+  socket.on('startAnimate', function(){
+    socket.emit('animate', {
+      character1 : 'kakashi',
+      character2 : 'naruto'
+    })
+  });
 
   socket.on('problem', function(data){
     /*  relay problem statement to slave  */
@@ -45,6 +173,25 @@ io.on('connection', function (socket) {
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
+
+        roomMatch = room.split(' ');
+        if(roomMatch[0] === 'codeRoom') {
+
+          var matchRefUrl = roomMatch[1];
+          // console.log('maaaaaaaaaatchID', matchId);
+          console.log('roooooooooooooom', matchRefUrl);
+          console.log('roooooooooooooom', room);
+          console.log('dataaaaaaaaaaaaa', data);
+          var matchRef = new Firebase(matchRefUrl);
+          var playerRef = matchRef.child('players/' + data.facebookId)
+          var typingState = playerRef.push();
+
+          matchRef.update({'startTime': data.startTime});
+          data.timestamp = Date.now();
+          // data.room = room;
+          typingState.update(data);
+        }
+
       }
     }.bind(this));
   });
@@ -69,13 +216,20 @@ io.on('connection', function (socket) {
 });
 
 var checkWaitingRoom = function(){
-  
+
   var waitingSockets = Object.keys(io.sockets.adapter.rooms.waitingRoom);
 
   if( waitingSockets.length > 1){
     /*  add prefix so coding rooms can be filtered later  */
-    var room = 'codeRoom' + roomCount.toString();
-    roomCount++;
+    var matchId = firebase.child('Matches').push();
+    matchId.set({
+      'startTime': Date.now(),
+      'endTime': 'empty',
+      'challengeId': 'empty',
+      'winnerId': 'empty',
+    })
+    console.log('waiting room matchID', matchId.toString())
+    var room = 'codeRoom ' + matchId;
 
     var player1 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[0]
@@ -83,11 +237,13 @@ var checkWaitingRoom = function(){
     var player2 = io.of('/').connected[
         Object.keys(io.sockets.adapter.rooms.waitingRoom)[1]
       ];
-    
+
     pair(room, player1, player2, function(room){
       /*  remit roomJoined to all members, possibly for start  */
+      var roomMatch = room.split(' ');
+      var matchId = roomMatch[1].slice(-20);
       io.sockets.to(room).emit('roomJoined', {
-        id:room,
+        matchId: matchId,
         player1:player1.username,
         player2:player2.username
       });
