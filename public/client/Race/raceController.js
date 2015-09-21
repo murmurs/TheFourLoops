@@ -25,7 +25,10 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   // countdown timer
   function timer(){
-    socket.emit('startAnimate');
+    //Call them like these at the start.
+    socket.emit('startAnimate', { avatar : 'kakashi', animation: 'stance' });
+    socket.emit('startAnimate', { avatar : 'naruto', animation: 'stance' });
+
     $scope.counter = 5;
     $scope.countComplete = true;
     var countDown = setInterval(function() {
@@ -181,7 +184,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         workerComplete = true; //don't execute the timeout function.
         renderCodeResponse(codeResponse.data); //pass the codeResponse object to the dom to be rendered.
       }
-      
+
       //check for worker timeout.
       setTimeout(function() {
         if (workerComplete === false){ //the worker has not completed after 5 seconds.
@@ -203,6 +206,11 @@ angular.module('coderace.race', ['ui.codemirror'])
       startTime: startTime,
       challengeId: challengeId,
     });
+
+    //How I call it when they are attacking
+    //Bug is kakashi attacks twice
+    socket.emit('startAnimate', { avatar : 'kakashi', animation: 'attack' });
+    socket.emit('startAnimate', { avatar : 'naruto', animation: 'attack' });
   };
 
   $scope.$on('$destroy', function(){
@@ -229,12 +237,12 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.opponentLeft = true;
   });
   socket.on('typing', function(data) {
-    $scope.competitorCode = data.code; 
+    $scope.competitorCode = data.code;
   })
   socket.on('roomJoined', function(matchData){
     $scope.room = matchData.matchId;
     timer();
-    $scope.opponent = master ? 
+    $scope.opponent = master ?
       matchData.player2: matchData.player1;
   });
   socket.on('passed', function(){
@@ -265,18 +273,18 @@ angular.module('coderace.race', ['ui.codemirror'])
       Race.setProblem(problem);
     }, 0, problem);
   });
-  
+
   //Everything below here is for the animation
   var stance = {
     'kakashi' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png',  'stance/Position6.png'],
     'naruto' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png', 'stance/Position6.png']
   }
-  
+
   var attack = {
     'kakashi' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png', 'attacks/attack1/Position12.png', 'attacks/attack1/Position13.png'],
     'naruto' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png']
   }
-  
+
   var img = document.getElementsByTagName('IMG');
   var index = 0;
   var index2 = 0;
@@ -291,71 +299,65 @@ angular.module('coderace.race', ['ui.codemirror'])
     var elem = img[2];
     var elem2 = img[3];
 
+    function kakashiStanceImg(){
+      index++;
 
-    if(data.moveType === 'normalAttack'){
-      if(data.facebookId === facebookId){
-        attackImg('naruto');
-      } else{
-        attackImg('kakashi');
-      }
-    }
-    else if(data.moveType === 'knockOut'){
-      if(data.facebookId === facebookId){
-        // call KO & Death Function
-      } else{
-        // call KO & Death Function
-      }
+      if (index >= stance.kakashi.length) index = 0;
+
+      elem.src = avatarPath + stance.kakashi[index];
     }
 
-    function stanceImg(avatar){
-      if (avatar === 'kakashi') index++;
-      else if (avatar === 'naruto') index2++;
+    function narutoStanceImg(){
+      index2++;
 
-      if (avatar === 'kakashi' && index >= stance.kakashi.length) index = 0;
-      else if (avatar === 'naruto' && index2 >= stance.naruto.length) index2 = 0;
+      if (index2 >= stance.naruto.length) index2 = 0;
 
-      if (avatar === 'kakashi') elem.src = avatarPath + stance.kakashi[index];
-      else if (avatar === 'naruto') elem2.src = avatarPath2 + stance.naruto[index2];
+      elem2.src = avatarPath2 + stance.naruto[index2];
     }
 
-    function attackImg(avatar){
-      if (avatar === 'kakashi') index++;
-      else if (avatar === 'naruto') index2++;
+    function kakashiAttackImg(){
+      index++;
 
-      if (avatar === 'kakashi') {
-        if (index >= attack.kakashi.length) {
-          switchImg(stanceImg.bind(null, 'kakashi'), 100, avatar)
-        }
-        else elem.src = avatarPath + attack.kakashi[index];
+      if (index >= attack.kakashi.length) {
+        switchImg('stance', 'kakashi')
       }
-      else if (avatar === 'naruto') {
-        if (index2 >= attack.naruto.length) {
-          switchImg(function(){ stanceImg('naruto') }, 100, avatar);
-        }
-        else elem2.src = avatarPath2 + attack.naruto[index];
-      }
+      else elem.src = avatarPath + attack.kakashi[index];
     }
-      
-    function switchImg(img, duration, avatar, attacking, running){
+
+    function narutoAttackImg(){
+      index2++;
+
+      if (index2 >= attack.naruto.length) {
+        switchImg('stance', 'naruto');
+      }
+      else elem2.src = avatarPath2 + attack.naruto[index];
+    }
+
+    function switchImg(animation, avatar, duration, attacking, running){
       duration = duration || 100;
-      index = 0;
+      index = -1;
+      index2 = -1;
       attacking = attacking || false;
       running = running || false;
-      if (avatar === 'kakashi') { 
-        clearInterval(thread); //For clearing a setInterval
-        thread = setInterval(img, duration);
+
+      if (avatar === 'kakashi') {
+        clearInterval(thread);
+
+        if (animation === 'stance') thread = setInterval(kakashiStanceImg, duration);
+        else if (animation === 'attack') thread = setInterval(kakashiAttackImg, duration);
       }
       else if (avatar === 'naruto') {
         clearInterval(thread2);
-        thread2 = setInterval(img, duration);
+
+        if (animation === 'stance') thread2 = setInterval(narutoStanceImg, duration);
+        else if (animation === 'attack') thread2 = setInterval(narutoAttackImg, duration);
       }
     }
- 
-    switchImg(stanceImg.bind(null, data['character1']), 100, data['character1']);
-    switchImg(attackImg.bind(null, data['character2']), 100, data['character2']);
-    
-    //to call the attack function just use this:
-    //attackImg(avatarName);
+
+    switchImg(data.action[1], data.action[0]);
+
+    //Call the animation like this:
+    //switchImg(animationStrin, data[character]);
   })
 });
 
