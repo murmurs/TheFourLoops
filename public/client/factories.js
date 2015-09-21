@@ -61,7 +61,7 @@ angular.module('coderace.factories', [])
   factory.getLength = function(){
     factory.dataRef.child("Challenges").on("value", function(snapshot) {
       var challenges = snapshot.val();
-      $rootScope.$broadcast('GotLength', challenges);
+      $rootScope.$broadcast('GotLength');
     });
   };
 
