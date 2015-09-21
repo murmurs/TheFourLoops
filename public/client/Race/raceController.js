@@ -423,8 +423,6 @@ angular.module('coderace.race', ['ui.codemirror'])
       }
     }
 
-    switchImg(data.action[1], data.action[0]);
-
     //Call the animation like this:
     //switchImg(animationStrin, data[character]);
   })
