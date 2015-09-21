@@ -137,10 +137,9 @@ io.on('connection', function (socket) {
   /* new socket (user) joins waiting room */
   
   /* handles the animation */
-  socket.on('startAnimate', function(){
+  socket.on('startAnimate', function(data){
     socket.emit('animate', {
-      character1 : 'kakashi',
-      character2 : 'naruto'
+      action : [data.avatar, data.animation]
     })
   });
 
