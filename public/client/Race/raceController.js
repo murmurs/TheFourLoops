@@ -227,29 +227,74 @@ angular.module('coderace.race', ['ui.codemirror'])
     'naruto' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png', 'stance/Position6.png']
   }
   
+  var attack = {
+    'kakashi' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png', 'attacks/attack1/Position12.png', 'attacks/attack1/Position13.png'],
+    'naruto' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png']
+  }
+  
   var img = document.getElementsByTagName('IMG');
   var index = 0;
   var index2 = 0;
   var attacking = false;
   var running = false;
-  var avatar = "img/kakashi/";
-  var avatar2 = "img/naruto/"
+  var avatarPath = "img/kakashi/";
+  var avatarPath2 = "img/naruto/"
+  
+  var thread, thread2;
   
   socket.on('animate', function(data){
     var elem = img[2];
     var elem2 = img[3];
     
-    function stanceImg(){
-      index++;
-      index2++;
+    function stanceImg(avatar){
+      if (avatar === 'kakashi') index++;
+      else if (avatar === 'naruto') index2++;
       
-      if (index >= stance.kakashi.length) index = 0;
-      if (index2 >= stance.naruto.length) index2 = 0;
+      if (avatar === 'kakashi' && index >= stance.kakashi.length) index = 0;
+      else if (avatar === 'naruto' && index2 >= stance.naruto.length) index2 = 0;
       
-      elem.src = avatar + stance.kakashi[index];
-      elem2.src = avatar2 + stance.naruto[index2];
+      if (avatar === 'kakashi') elem.src = avatarPath + stance.kakashi[index];
+      else if (avatar === 'naruto') elem2.src = avatarPath2 + stance.naruto[index2];
+    }
+      
+    function attackImg(avatar){
+      if (avatar === 'kakashi') index++;
+      else if (avatar === 'naruto') index2++;
+
+      if (avatar === 'kakashi') {
+        if (index >= attack.kakashi.length) {
+          switchImg(stanceImg.bind(null, 'kakashi'), 100, avatar)
+        }
+        else elem.src = avatarPath + attack.kakashi[index];
       }
-    setInterval(stanceImg, 120);
+      else if (avatar === 'naruto') {
+        if (index2 >= attack.naruto.length) {
+          switchImg(function(){ stanceImg('naruto') }, 100, avatar);
+        }
+        else elem2.src = avatarPath2 + attack.naruto[index];
+      }
+    }
+      
+    function switchImg(img, duration, avatar, attacking, running){
+      duration = duration || 100;
+      index = 0;
+      attacking = attacking || false;
+      running = running || false;
+      if (avatar === 'kakashi') { 
+        clearInterval(thread); //For clearing a setInterval
+        thread = setInterval(img, duration);
+      }
+      else if (avatar === 'naruto') {
+        clearInterval(thread2);
+        thread2 = setInterval(img, duration);
+      }
+    }
+ 
+    switchImg(stanceImg.bind(null, data['character1']), 100, data['character1']);
+    switchImg(attackImg.bind(null, data['character2']), 100, data['character2']);
+    
+    //to call the attack function just use this:
+    //attackImg(avatarName);
   })
 });
 
