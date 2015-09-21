@@ -349,3 +349,9 @@ h4, button{
   position: relative;
 
 }
+
+/*About Us Page*/
+.teamInfo{
+  display: inline-block;
+  padding: 10px;
+}
