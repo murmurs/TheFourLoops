@@ -139,8 +139,8 @@ io.on('connection', function (socket) {
   /* handles the animation */
   socket.on('startAnimate', function(){
     socket.emit('animate', {
-      character1 : 'stance',
-      character2 : 'stance'
+      character1 : 'kakashi',
+      character2 : 'naruto'
     })
   });
 
