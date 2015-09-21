@@ -209,41 +209,50 @@ io.on('connection', function (socket) {
           typingState.update(data);
         }
 
-        var testGhost = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
-
-        var context = this;
-
-        testGhost.once('value', function(snapshot){
-          var ghostTypingObj = snapshot.val();
-          var ghostTypingArr = [];
-
-          for(var key in ghostTypingObj){
-            ghostTypingArr[ghostTypingArr.length] = ghostTypingObj[key];
-          }
-
-          ghostTypingArr.sort(function(a,b){
-            return a.timestamp - b.timestamp;
-          })
-
-          ghostTypingArr.forEach(function(typedObject, i, l){
-            var delay = typedObject.timestamp - typedObject.startTime;
-            console.log('outside', i, delay)
-            setTimeout(function(){
-              // if(typedObject.room === room){
-                console.log('fire', i);
-                io.to(room).emit('typing', typedObject);
-                io.to(room).emit('animate', {
-                  facebookId: 'ghost',
-                  moveType: 'normalAttack',
-                });
-              // }
-            }, delay)
-          })
-        })
-
       }
     }.bind(this));
   });
+
+  socket.on('ghostMatchBegin', function(data){
+    this.rooms.forEach(function(room){
+      if( room !== 'waitingRoom'){
+        testGhost(room);
+      }
+    });
+  });
+
+  function testGhost(room){
+
+    var testGhost = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
+
+    testGhost.once('value', function(snapshot){
+      var ghostTypingObj = snapshot.val();
+      var ghostTypingArr = [];
+
+      for(var key in ghostTypingObj){
+        ghostTypingArr[ghostTypingArr.length] = ghostTypingObj[key];
+      }
+
+      ghostTypingArr.sort(function(a,b){
+        return a.timestamp - b.timestamp;
+      })
+
+      ghostTypingArr.forEach(function(typedObject, i, l){
+        var delay = typedObject.timestamp - typedObject.startTime;
+        console.log('outside', i, delay)
+        setTimeout(function(){
+          // if(typedObject.room === room){
+            console.log('fire', i);
+            io.to(room).emit('typing', typedObject);
+            io.to(room).emit('animate', {
+              facebookId: 'ghost',
+              moveType: 'normalAttack',
+            });
+          // }
+        }, delay)
+      })
+    })
+  }
 
   socket.on('passed', function(){
     /* player passed */
