@@ -314,8 +314,12 @@ angular.module('coderace.race', ['ui.codemirror'])
     else if(data.moveType === 'knockOut'){
       if(data.facebookId === facebookId){
         // call KO & Death Function
+        switchImg('specialAttack', 'naruto');
+        // switchImg('defeat', 'kakashi');
       } else{
         // call KO & Death Function
+        switchImg('specialAttack', 'kakashi');
+        // switchImg('defeat', 'naruto');
       }
     }
 
@@ -422,8 +426,6 @@ angular.module('coderace.race', ['ui.codemirror'])
         else if (animation === 'defeat') { clearInterval(thread2); thread2 = setInterval(narutoDefeatImg, duration); attacking2 = true; }
       }
     }
-
-    switchImg(data.action[1], data.action[0]);
 
     //Call the animation like this:
     //switchImg(animationStrin, data[character]);
