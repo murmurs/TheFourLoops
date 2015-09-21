@@ -1,6 +1,7 @@
 angular.module('coderace.start', [])
   .controller('startController', ['$scope', '$location', 'socket', 'Race', function($scope, $location, socket, Race){
 
+    $scope.koCounter = 0;
     //this function parses our cookie for the profileName and 
     //saves it as our user name
     var parseCookie = function(cookie){
@@ -30,6 +31,8 @@ angular.module('coderace.start', [])
     }
 
     $scope.playGhost = function(){
+      //logic to fill the room with the ghost;
+      //start the ghost animation;
       $location.path('/challengeGhost');
     }
 
