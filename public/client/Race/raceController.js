@@ -5,7 +5,6 @@ angular.module('coderace.race', ['ui.codemirror'])
   $scope.room = false; // need to revert to false. only done for testing --- tito
   $scope.opponentLeft = false;
   $scope.opponentPassed = false;
-  $scope.username = Race.username;
 
   var getCookies = function(){
     var pairs = document.cookie.split(";");
@@ -20,14 +19,16 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   var cookies = getCookies();
   var facebookId = document.facebookId = cookies.userID;
+  var facebookDisplayName = document.facebookDisplayName = cookies.displayName;
   var startTime;
+  var challengeId;
 
   // countdown timer
   function timer(){
     //Call them like these at the start.
     socket.emit('startAnimate', { avatar : 'kakashi', animation: 'stance' });
     socket.emit('startAnimate', { avatar : 'naruto', animation: 'stance' });
-    
+
     $scope.counter = 5;
     $scope.countComplete = true;
     var countDown = setInterval(function() {
@@ -39,6 +40,10 @@ angular.module('coderace.race', ['ui.codemirror'])
         $('#waitingOverlay').css('display', 'none');
         codeMirror();
         startTime = Date.now();
+        var matchId = $scope.room
+        var matchRef = Race.dataRef.child('Matches/' + matchId);
+        matchRef.update({'startTime': startTime});
+        matchRef.update({'challengeId': challengeId});
       }
     }, 1000);
   }
@@ -78,7 +83,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   //when the data is loaded in the factory, load the data in the html and set the challenge inputs.
   $scope.$on('Race:ready', function (event, data) {
     $scope.code = data.startingCode;
-    $scope.question = data.question; 
+    $scope.question = data.question;
     $scope.functionName = data.functionName;
     $scope.$apply(); //push the newly acquired data to the dom.
 
@@ -99,6 +104,36 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.passed = undefined;
     $scope.responseText = undefined;
 
+    var matchId = $scope.room
+
+    var storeMatchResults = function(){
+      Race.dataRef.child('Matches/' + matchId).update({
+        winnerId: facebookId,
+        endTime: Date.now(),
+      })
+    }
+
+    var storeGhost = function(){
+      var matchRef = Race.dataRef.child('Matches/' + matchId);
+      var matchesRef = matchRef.parent();
+
+      matchRef.once('value', function(snapshot){
+        var matchObj = snapshot.val();
+
+        var winnerId = matchObj.winnerId;
+        var winnerTypingDataRef = matchRef.child('players/' + winnerId);
+        winnerTypingDataRef.once('value', function(snapshot){
+          var ghostData = snapshot.val();
+          var ghostsRef = Race.dataRef.child('Challenges/' + challengeId + '/Ghosts');
+          var ghostIdRef = ghostsRef.push();
+          ghostIdRef.set({
+            typingData: ghostData,
+            gameDuration: matchObj.endTime - matchObj.startTime,
+          });
+        })
+      })
+    }
+
     //render the results from the worker in the dom.
     var renderCodeResponse = function(codeResponse) {
       $scope.dataLoaded = true; //set this to true to stop the spinner.
@@ -108,17 +143,16 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.passed = codeResponse.passed;
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
       if(codeResponse.passed){
-        var matchId = $scope.room
-        Race.dataRef.child('Matches/' + matchId).update({
-          winnerId: facebookId,
-        })
+        storeMatchResults();
+        storeGhost();
+        socket.emit('knockOut', {facebookId: facebookId});
       }
 
       $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
     };
 
-  
-    //Execute the worker on the client side 
+
+    //Execute the worker on the client side
     if (window.Worker) { //verify that the browser has worker capability.
       var evalWorker = new Worker("client/evalWorker.js");
 
@@ -150,7 +184,7 @@ angular.module('coderace.race', ['ui.codemirror'])
         workerComplete = true; //don't execute the timeout function.
         renderCodeResponse(codeResponse.data); //pass the codeResponse object to the dom to be rendered.
       }
-      
+
       //check for worker timeout.
       setTimeout(function() {
         if (workerComplete === false){ //the worker has not completed after 5 seconds.
@@ -170,8 +204,9 @@ angular.module('coderace.race', ['ui.codemirror'])
       code: code,
       facebookId: facebookId,
       startTime: startTime,
+      challengeId: challengeId,
     });
-    
+
     //How I call it when they are attacking
     //Bug is kakashi attacks twice
     socket.emit('startAnimate', { avatar : 'kakashi', animation: 'attack' });
@@ -186,20 +221,28 @@ angular.module('coderace.race', ['ui.codemirror'])
     socket.connect();
   }
 
-  socket.emit('start', {
-    username:Race.username
-  });
-  
+  if(true){
+    socket.emit('start', {
+      username: facebookDisplayName.split(' ')[0],
+      gameType: 'ghostMatch',
+    })
+  } else if(false){
+    socket.emit('start', {
+      username: facebookDisplayName.split(' ')[0],
+      gameType: 'randomPlayerVsPlayer'
+    });
+  }
+
   socket.on('opponentLeft', function(){
     $scope.opponentLeft = true;
   });
   socket.on('typing', function(data) {
-    $scope.competitorCode = data.code; 
+    $scope.competitorCode = data.code;
   })
   socket.on('roomJoined', function(matchData){
     $scope.room = matchData.matchId;
     timer();
-    $scope.opponent = master ? 
+    $scope.opponent = master ?
       matchData.player2: matchData.player1;
   });
   socket.on('passed', function(){
@@ -216,30 +259,32 @@ angular.module('coderace.race', ['ui.codemirror'])
 
       challengeIdsArray = Object.keys(challengesObject);
       var randomIndex = getRandomArbitrary(0, challengeIdsArray.length);
-      console.log(challengeIdsArray)
 
       Race.getData(challengeIdsArray[randomIndex], function(problem){
+        challengeId = challengeIdsArray[randomIndex];
+        problem.challengeId = challengeId
         socket.emit('problem', problem);
       });
     });
   });
   socket.on('problem', function(problem){
+    challengeId = problem.challengeId;
     setTimeout(function(){
       Race.setProblem(problem);
     }, 0, problem);
   });
-  
+
   //Everything below here is for the animation
   var stance = {
     'kakashi' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png',  'stance/Position6.png'],
     'naruto' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png', 'stance/Position6.png']
   }
-  
+
   var attack = {
     'kakashi' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png', 'attacks/attack1/Position12.png', 'attacks/attack1/Position13.png'],
     'naruto' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png']
   }
-  
+
   var img = document.getElementsByTagName('IMG');
   var index = 0;
   var index2 = 0;
@@ -247,29 +292,29 @@ angular.module('coderace.race', ['ui.codemirror'])
   var running = false;
   var avatarPath = "img/kakashi/";
   var avatarPath2 = "img/naruto/"
-  
+
   var thread, thread2;
-  
+
   socket.on('animate', function(data){
     var elem = img[2];
     var elem2 = img[3];
-    
+
     function kakashiStanceImg(){
       index++;
-      
-      if (index >= stance.kakashi.length) index = 0;  
-      
+
+      if (index >= stance.kakashi.length) index = 0;
+
       elem.src = avatarPath + stance.kakashi[index];
     }
-    
+
     function narutoStanceImg(){
       index2++;
 
       if (index2 >= stance.naruto.length) index2 = 0;
-      
+
       elem2.src = avatarPath2 + stance.naruto[index2];
     }
-      
+
     function kakashiAttackImg(){
       index++;
 
@@ -278,39 +323,39 @@ angular.module('coderace.race', ['ui.codemirror'])
       }
       else elem.src = avatarPath + attack.kakashi[index];
     }
-    
+
     function narutoAttackImg(){
       index2++;
-      
+
       if (index2 >= attack.naruto.length) {
         switchImg('stance', 'naruto');
       }
       else elem2.src = avatarPath2 + attack.naruto[index];
     }
-      
+
     function switchImg(animation, avatar, duration, attacking, running){
       duration = duration || 100;
       index = -1;
       index2 = -1;
       attacking = attacking || false;
       running = running || false;
-      
-      if (avatar === 'kakashi') { 
+
+      if (avatar === 'kakashi') {
         clearInterval(thread);
-        
+
         if (animation === 'stance') thread = setInterval(kakashiStanceImg, duration);
         else if (animation === 'attack') thread = setInterval(kakashiAttackImg, duration);
       }
-      else if (avatar === 'naruto') { 
+      else if (avatar === 'naruto') {
         clearInterval(thread2);
-        
+
         if (animation === 'stance') thread2 = setInterval(narutoStanceImg, duration);
         else if (animation === 'attack') thread2 = setInterval(narutoAttackImg, duration);
       }
     }
- 
+
     switchImg(data.action[1], data.action[0]);
-    
+
     //Call the animation like this:
     //switchImg(animationStrin, data[character]);
   })
