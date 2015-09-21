@@ -9,7 +9,8 @@
     <div id="profileView">
       <div>{{username}}</div>
       <div id="fbPicture">
-        Add Facebook Picture Here!
+      <!-- Facebook wouldn't give us access to the user's profile picture until our app was reviewed, so we just use this default photo -->
+        <img src='puzzle_fighter_homage.gif' />
       </div>
     </div>
     <div id="challengeInfo">
@@ -21,7 +22,23 @@
         <p>should be able to playback past matches</p>
       </div>
     </div>
-    <button ng-click="start()">Challenge Button</button>
+    <!-- <li>
+        Choose Your Battle!
+        <ul>
+          <li>1 v 1</li>
+          <li>1 v Ghost</li>
+        </ul>
+    </li> -->
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Choose Your Fight
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="" ng-click="start()">1 v 1</a></li>
+        <li><a href="" ng-click="playGhost()">1 v Ghost</a></li>
+      </ul>
+    </div>
   </div>
 </div>
 
