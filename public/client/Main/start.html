@@ -1,32 +1,36 @@
 <div ng-switch="authenticate()">
   <div ng-switch-when="false">
-    <h2 style="text-align:center; margin:auto; margin-top:10px; display:block; margin-bottom:40px; margin-top:40px; font-size:xx-large">Start a code fight!</h2>
-
-    <!-- change href once deployed -->
-    <a style="text-align:center; margin:auto; margin-top:10px; display:block;" ng-href="http://localhost:3000/auth-facebook" id="facebookButton" ><img src="login-facebook.png"/></a>
+    <div style="margin: auto 5px">
+      <h2 style="text-align:center; margin:0 auto; display:block; margin-bottom:150px; margin-top:150px; font-size:75px; color: #ECF0F5;
+         text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;">Start a code fight!</h2>
+      <!-- change href once deployed -->
+      <a ng-href="http://localhost:3000/auth-facebook" id="facebookButton" >
+        <img style="text-align:center; margin:auto; margin-top:10px; display:block; border-radius: 10px; width: 250px;" src="login-facebook.png"/>
+      </a>
+    </div>
   </div>
   <div ng-switch-default>
-    <div id="profileView">
-      <div>{{username}}</div>
+    <div id="profileView" style="width: 100%; text-align: center">
+      <div id="fighterText" style="margin: 20px 0; display: inline-block; font-size: 40px; color: #F77E01">{{username}}</div>
       <div id="fbPicture">
       <!-- Facebook wouldn't give us access to the user's profile picture until our app was reviewed, so we just use this default photo -->
         <img src='puzzle_fighter_homage.gif' />
       </div>
     </div>
-    <div id="challengeInfo">
-      <div> CHALLENGE STATS
-        <div id='statsHolder'></div>
-          <p>should contain the average time for each challenge</p>
-          <p>should contain the win to lose ratio</p>
-          <p>should be able to playback past matches</p>
+    <div id="challengeInfo" style="width: 100%; text-align: center; margin-top: 20px">
+      <div id="fighterText" style="display: inline-block; color: #A2C70F"> CHALLENGE STATS
+        <div id='statsHolder' style="margin: 20px 0"></div>
+          <p id="fighterText" style="font-size:18px">should contain the average time for each challenge</p>
+          <p id="fighterText" style="font-size:18px">should contain the win to lose ratio</p>
+          <p id="fighterText" style="font-size:18px">should be able to playback past matches</p>
       </div>
     </div>
-    <div class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <div class="dropdown" style="width: 100%; text-align: center">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="margin-top: 20px; display: inline-block; width: 250px">
         Choose Your Fight
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="width: 100%; text-align: center">
         <li><a href="" ng-click="start()">1 v 1</a></li>
         <li><a href="" ng-click="playGhost()">1 v Ghost</a></li>
       </ul>

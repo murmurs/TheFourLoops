@@ -2,7 +2,7 @@ angular.module('coderace.start', [])
   .controller('startController', ['$scope', '$location', 'socket', 'Race', function($scope, $location, socket, Race){
 
     $scope.koCounter = 0;
-    //this function parses our cookie for the profileName and 
+    //this function parses our cookie for the profileName and
     //saves it as our user name
     var parseCookie = function(cookie){
       cookie = cookie.split(';');
@@ -15,9 +15,9 @@ angular.module('coderace.start', [])
       }
       return userName;
     }
-    
+
     $scope.username = parseCookie(document.cookie); //Race.username
-    
+
     $scope.start = function(){
       socket.connect();
       socket.emit('username', $scope.username);
