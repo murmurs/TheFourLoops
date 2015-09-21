@@ -13,8 +13,8 @@ h4, button{
 
 .logo {
   position: relative;
-  top:-10px;
-  width:70px;
+  top:-2px;
+  width:155px;
   background-color: white;
   border-radius: 3px
 }
@@ -107,6 +107,7 @@ h4, button{
 
 #opponentEditor{
   position:relative;
+  opacity: 0.8;
   left:15px;
   top:-4px;
   color: red;
@@ -346,5 +347,5 @@ h4, button{
 .navbar-text a {
   color: white;
   position: relative;
-  
+
 }
