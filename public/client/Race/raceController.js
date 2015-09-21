@@ -306,9 +306,9 @@ angular.module('coderace.race', ['ui.codemirror'])
 
     if(data.moveType === 'normalAttack'){
       if(data.facebookId === facebookId){
-        switchImg('attack', 'naruto');
+        data.action = ['attack', 'naruto'];
       } else{
-        switchImg('attack', 'kakashi');
+        data.action = ['attack', 'kakashi'];
       }
     }
     else if(data.moveType === 'knockOut'){
@@ -357,7 +357,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
     function narutoAttackImg(){
       index2++;
-
+      
       if (index2 >= attack.naruto.length) {
         switchImg('stance', 'naruto');
       }
@@ -412,20 +412,22 @@ angular.module('coderace.race', ['ui.codemirror'])
       index2 = -1;
 
       if (avatar === 'kakashi') {
-
         if (animation === 'stance') { clearInterval(thread); thread = setInterval(kakashiStanceImg, duration); attacking = false; }
         else if (animation === 'attack' && !attacking) { clearInterval(thread); thread = setInterval(kakashiAttackImg, duration); attacking = true; }
         else if (animation === 'specialAttack' && !attacking) { clearInterval(thread); thread = setInterval(kakashiSpecialAttackImg, duration); attacking = true; }
         else if (animation === 'defeat') { clearInterval(thread); thread = setInterval(kakashiDefeatImg, duration); attacking = true; }
       }
       else if (avatar === 'naruto') {
-
-        if (animation === 'stance') { clearInterval(thread2); thread2 = setInterval(narutoStanceImg, duration); attacking2 = false; }
-        else if (animation === 'attack' && !attacking2) { clearInterval(thread2); thread2 = setInterval(narutoAttackImg, duration); attacking2 = true; }
-        else if (animation === 'specialAttack' && !attacking2) { clearInterval(thread2); thread2 = setInterval(narutoSpecialAttackImg, duration); attacking2 = true; }
-        else if (animation === 'defeat') { clearInterval(thread2); thread2 = setInterval(narutoDefeatImg, duration); attacking2 = true; }
+        
+        console.log(data);
+        if (animation === 'stance') { attacking2 = false; clearInterval(thread2); thread2 = setInterval(narutoStanceImg, duration); }
+        else if (animation === 'attack' && !attacking2) { attacking2 = true; clearInterval(thread2); thread2 = setInterval(narutoAttackImg, duration); }
+        else if (animation === 'specialAttack' && !attacking2) { attacking2 = true; clearInterval(thread2); thread2 = setInterval(narutoSpecialAttackImg, duration); }
+        else if (animation === 'defeat') { attacking2 = true; clearInterval(thread2); thread2 = setInterval(narutoDefeatImg, duration); }
       }
     }
+
+    switchImg(data.action[0], data.action[1]);
 
     //Call the animation like this:
     //switchImg(animationStrin, data[character]);
