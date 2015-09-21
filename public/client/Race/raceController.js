@@ -286,6 +286,11 @@ angular.module('coderace.race', ['ui.codemirror'])
     'naruto' : ['specials/special1/Position1.png', 'specials/special1/Position2.png', 'specials/special1/Position3.png', 'specials/special1/Position4.png', 'specials/special1/Position5.png', 'specials/special1/Position6.png', 'specials/special1/Position7.png', 'specials/special1/Position8.png', 'specials/special1/Position9.png', 'specials/special1/Position10.png', 'specials/special1/Position11.png', 'specials/special1/Position12.png', 'specials/special1/Position13.png', 'specials/special1/Position14.png', 'specials/special1/Position15.png', 'specials/special1/Position16.png', 'specials/special1/Position17.png', 'specials/special1/Position18.png', 'specials/special1/Position19.png', 'specials/special1/Position20.png', 'specials/special1/Position21.png', 'specials/special1/Position22.png', 'specials/special1/Position23.png']
   }
   
+  var defeat = {
+    kakashi : ['defeat/Position1.png', 'defeat/Position2.png', 'defeat/Position3.png', 'defeat/Position4.png', 'defeat/Position5.png'],
+    naruto : ['defeat/Position1.png', 'defeat/Position2.png', 'defeat/Position3.png', 'defeat/Position4.png', 'defeat/Position5.png', 'defeat/Position6.png', 'defeat/Position7.png']
+  }
+  
   var img = document.getElementsByTagName('IMG');
   var index = 0;
   var index2 = 0;
@@ -355,6 +360,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       else elem2.src = avatarPath2 + attack.naruto[index];
     }
     
+    ///////////////////Special Attack//////////////////////
     function kakashiSpecialAttackImg(){
       index++;
       
@@ -380,27 +386,40 @@ angular.module('coderace.race', ['ui.codemirror'])
       }
       else elem2.src = avatarPath2 + specialAttack.naruto[index];
     }
+    
+    ///////////////////////Defeat//////////////////////
+    function kakashiDefeatImg(){
+      index++;
       
-    function switchImg(animation, avatar, duration, attacking, running){
+      if (index >= defeat.kakashi.length) index--;
+      elem.src = avatar + defeat.kakashi[index];
+    }
+    
+    function narutoDefeatImg(){
+      index2++;
+      
+      if (index2 >= defeat.naruto.length) index2 = 5;
+      elem2.src = avatar + defeat.naruto[index2];
+    }
+      
+    function switchImg(animation, avatar, duration){
       duration = duration || 100;
       index = -1;
       index2 = -1;
-      attacking = attacking || false;
-      running = running || false;
 
       if (avatar === 'kakashi') {
-        clearInterval(thread);
 
-        if (animation === 'stance') thread = setInterval(kakashiStanceImg, duration);
-        else if (animation === 'attack') thread = setInterval(kakashiAttackImg, duration);
-        else if (animation === 'specialAttack') thread = setInterval(kakashiSpecialAttackImg, duration);
+        if (animation === 'stance') { clearInterval(thread); thread = setInterval(kakashiStanceImg, duration); attacking = false; }
+        else if (animation === 'attack' && !attacking) { clearInterval(thread); thread = setInterval(kakashiAttackImg, duration); attacking = true; }
+        else if (animation === 'specialAttack' && !attacking) { clearInterval(thread); thread = setInterval(kakashiSpecialAttackImg, duration); attacking = true; }
+        else if (animation === 'defeat') { clearInterval(thread); thread = setInterval(kakashiDefeatImg, duration); attacking = true; }
       }
       else if (avatar === 'naruto') {
-        clearInterval(thread2);
 
-        if (animation === 'stance') thread2 = setInterval(narutoStanceImg, duration);
-        else if (animation === 'attack') thread2 = setInterval(narutoAttackImg, duration);
-        else if (animation === 'specialAttack') thread2 = setInterval(narutoSpecialAttackImg, duration);
+        if (animation === 'stance') { clearInterval(thread2); thread2 = setInterval(narutoStanceImg, duration); attacking = false; }
+        else if (animation === 'attack' && !attacking) { clearInterval(thread2); thread2 = setInterval(narutoAttackImg, duration); attacking = true; }
+        else if (animation === 'specialAttack' && !attacking) { clearInterval(thread2); thread2 = setInterval(narutoSpecialAttackImg, duration); attacking = true; }
+        else if (animation === 'defeat') { clearInterval(thread2); thread2 = setInterval(narutoDefeatImg, duration); attacking = true; }
       }
     }
 
