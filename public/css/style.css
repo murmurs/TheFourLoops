@@ -7,17 +7,36 @@ body{
   font-family: 'Permanent Marker', cursive;
 }
 
+#teamRow {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+#teamPhotosContainer {
+  margin-right: 40px;
+}
+
 h4, button{
   display: inline;
 }
 
 #profilepic {
-  width: 275px;
+  width: 230px;
   border-radius: 137.5px;
+  float: right;
+}
+
+#fighterText {
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+  color: white;
+  font-size: 25px;
 }
 
 #aboutusText {
-  color: #ECF0F5;
+  color: white;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+  text-align: center;
+  font-size: 22px;
 }
 
 .logo {
