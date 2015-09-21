@@ -314,8 +314,12 @@ angular.module('coderace.race', ['ui.codemirror'])
     else if(data.moveType === 'knockOut'){
       if(data.facebookId === facebookId){
         // call KO & Death Function
+        switchImg('specialAttack', 'naruto');
+        // switchImg('defeat', 'kakashi');
       } else{
         // call KO & Death Function
+        switchImg('specialAttack', 'kakashi');
+        // switchImg('defeat', 'naruto');
       }
     }
 
