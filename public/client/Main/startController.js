@@ -29,6 +29,9 @@ angular.module('coderace.start', [])
       return true;
     }
 
-    console.log(document.cookie.split(';'));
+    $scope.playGhost = function(){
+      $location.path('/challengeGhost');
+    }
+
   }]);
 
