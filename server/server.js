@@ -232,6 +232,10 @@ io.on('connection', function (socket) {
               // if(typedObject.room === room){
                 console.log('fire', i);
                 io.to(room).emit('typing', typedObject);
+                io.to(room).emit('animate', {
+                  facebookId: 'ghost',
+                  moveType: 'normalAttack',
+                });
               // }
             }, delay)
           })
