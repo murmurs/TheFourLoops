@@ -207,10 +207,6 @@ angular.module('coderace.race', ['ui.codemirror'])
       startTime: startTime,
       challengeId: challengeId,
     });
-
-    //How I call it when they are attacking
-    //Bug is kakashi attacks twice
-
   };
 
   $scope.$on('$destroy', function(){
@@ -284,10 +280,16 @@ angular.module('coderace.race', ['ui.codemirror'])
     'kakashi' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png', 'attacks/attack1/Position12.png', 'attacks/attack1/Position13.png'],
     'naruto' : ['attacks/attack1/Position1.png', 'attacks/attack1/Position2.png', 'attacks/attack1/Position3.png', 'attacks/attack1/Position4.png', 'attacks/attack1/Position5.png', 'attacks/attack1/Position6.png', 'attacks/attack1/Position7.png', 'attacks/attack1/Position8.png', 'attacks/attack1/Position9.png', 'attacks/attack1/Position10.png', 'attacks/attack1/Position11.png']
   }
-
+  
+  var specialAttack = {
+    'kakashi' : ['specials/special1/Position1.png', 'specials/special1/Position2.png', 'specials/special1/Position3.png', 'specials/special1/Position4.png', 'specials/special1/Position5.png', 'specials/special1/Position6.png', 'specials/special1/Position7.png', 'specials/special1/Position8.png', 'specials/special1/Position9.png', 'specials/special1/Position10.png', 'specials/special1/Position11.png', 'specials/special1/Position12.png', 'specials/special1/Position13.png', 'specials/special1/Position14.png', 'specials/special1/Position15.png', 'specials/special1/Position16.png', 'specials/special1/Position17.png', 'specials/special1/Position18.png', 'specials/special1/Position19.png', 'specials/special1/Position20.png', 'specials/special1/Position21.png', 'specials/special1/Position22.png', 'specials/special1/Position23.png', 'specials/special1/Position24.png', 'specials/special1/Position25.png', 'specials/special1/Position26.png'],
+    'naruto' : ['specials/special1/Position1.png', 'specials/special1/Position2.png', 'specials/special1/Position3.png', 'specials/special1/Position4.png', 'specials/special1/Position5.png', 'specials/special1/Position6.png', 'specials/special1/Position7.png', 'specials/special1/Position8.png', 'specials/special1/Position9.png', 'specials/special1/Position10.png', 'specials/special1/Position11.png', 'specials/special1/Position12.png', 'specials/special1/Position13.png', 'specials/special1/Position14.png', 'specials/special1/Position15.png', 'specials/special1/Position16.png', 'specials/special1/Position17.png', 'specials/special1/Position18.png', 'specials/special1/Position19.png', 'specials/special1/Position20.png', 'specials/special1/Position21.png', 'specials/special1/Position22.png', 'specials/special1/Position23.png']
+  }
+  
   var img = document.getElementsByTagName('IMG');
   var index = 0;
   var index2 = 0;
+  var left = -50, left2 = -30;
   var attacking = false;
   var running = false;
   var avatarPath = "img/kakashi/";
@@ -315,11 +317,13 @@ angular.module('coderace.race', ['ui.codemirror'])
     var elem = img[2];
     var elem2 = img[3];
 
+    ////////////////////////STANCE////////////////////////////////////////
     function kakashiStanceImg(){
       index++;
-
-      if (index >= stance.kakashi.length) index = 0;
-
+      
+      if (index >= stance.kakashi.length) index = 0;  
+      
+      elem.style.left = '-50px';
       elem.src = avatarPath + stance.kakashi[index];
     }
 
@@ -327,10 +331,12 @@ angular.module('coderace.race', ['ui.codemirror'])
       index2++;
 
       if (index2 >= stance.naruto.length) index2 = 0;
-
+      
+      elem2.style.left = '-30px';
       elem2.src = avatarPath2 + stance.naruto[index2];
     }
-
+      
+    ////////////////////////ATTACK//////////////////////////////////////// 
     function kakashiAttackImg(){
       index++;
 
@@ -348,7 +354,33 @@ angular.module('coderace.race', ['ui.codemirror'])
       }
       else elem2.src = avatarPath2 + attack.naruto[index];
     }
-
+    
+    function kakashiSpecialAttackImg(){
+      index++;
+      
+      if (index >= 12 && index <= 13) left += 220;
+      elem.style.left = left + "px";
+      
+      if (index >= specialAttack.kakashi.length) {
+        switchImg('stance', 'kakashi');
+        left = -50;
+      }
+      else elem.src = avatarPath + specialAttack.kakashi[index];
+    }
+    
+    function narutoSpecialAttackImg(){
+      index2++;
+      
+      if (index2 >= 1 && index2 <= 6) left2 -= 80;
+      if (index2 === 20) left2 = -30;
+      elem2.style.left = left2 + "px";
+      
+      if (index2 >= specialAttack.naruto.length) {
+        switchImg('stance', 'naruto');
+      }
+      else elem2.src = avatarPath2 + specialAttack.naruto[index];
+    }
+      
     function switchImg(animation, avatar, duration, attacking, running){
       duration = duration || 100;
       index = -1;
@@ -361,12 +393,14 @@ angular.module('coderace.race', ['ui.codemirror'])
 
         if (animation === 'stance') thread = setInterval(kakashiStanceImg, duration);
         else if (animation === 'attack') thread = setInterval(kakashiAttackImg, duration);
+        else if (animation === 'specialAttack') thread = setInterval(kakashiSpecialAttackImg, duration);
       }
       else if (avatar === 'naruto') {
         clearInterval(thread2);
 
         if (animation === 'stance') thread2 = setInterval(narutoStanceImg, duration);
         else if (animation === 'attack') thread2 = setInterval(narutoAttackImg, duration);
+        else if (animation === 'specialAttack') thread2 = setInterval(narutoSpecialAttackImg, duration);
       }
     }
 
