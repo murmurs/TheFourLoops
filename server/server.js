@@ -144,6 +144,17 @@ io.on('connection', function (socket) {
     })
   });
 
+  socket.on('knockOut', function(data){
+    this.rooms.forEach(function(room){
+      if( room !== 'waitingRoom'){
+        io.to(room).emit('animate', {
+          facebookId: data.facebookId,
+          moveType: 'knockOut',
+        });
+      }
+    })
+  })
+
   socket.on('problem', function(data){
     /*  relay problem statement to slave  */
     this.rooms.forEach(function(room){

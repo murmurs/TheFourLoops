@@ -138,13 +138,14 @@ angular.module('coderace.race', ['ui.codemirror'])
       if(codeResponse.passed){
         storeMatchResults();
         storeGhost();
+        socket.emit('knockOut', {facebookId: facebookId});
       }
 
       $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
     };
 
-  
-    //Execute the worker on the client side 
+
+    //Execute the worker on the client side
     if (window.Worker) { //verify that the browser has worker capability.
       var evalWorker = new Worker("client/evalWorker.js");
 
@@ -284,6 +285,13 @@ angular.module('coderace.race', ['ui.codemirror'])
         attackImg('naruto');
       } else{
         attackImg('kakashi');
+      }
+    }
+    else if(data.moveType === 'knockOut'){
+      if(data.facebookId === facebookId){
+        // call KO & Death Function
+      } else{
+        // call KO & Death Function
       }
     }
 
