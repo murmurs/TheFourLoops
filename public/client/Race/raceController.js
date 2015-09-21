@@ -24,6 +24,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   // countdown timer
   function timer(){
+    socket.emit('startAnimate');
     $scope.counter = 5;
     $scope.countComplete = true;
     var countDown = setInterval(function() {
@@ -219,6 +220,35 @@ angular.module('coderace.race', ['ui.codemirror'])
       Race.setProblem(problem);
     }, 0, problem);
   });
+  var stance = {
+    'kakashi' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png',  'stance/Position6.png'],
+    'naruto' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png', 'stance/Position6.png']
+  }
+  
+  var img = document.getElementsByTagName('IMG');
+  var index = 0;
+  var index2 = 0;
+  var attacking = false;
+  var running = false;
+  var avatar = "img/kakashi/";
+  var avatar2 = "img/naruto/"
+  
+  socket.on('animate', function(data){
+    var elem = img[2];
+    var elem2 = img[3];
+    
+    function stanceImg(){
+      index++;
+      index2++;
+      
+      if (index >= stance.kakashi.length) index = 0;
+      if (index2 >= stance.naruto.length) index2 = 0;
+      
+      elem.src = avatar + stance.kakashi[index];
+      elem2.src = avatar2 + stance.naruto[index2];
+      }
+    setInterval(stanceImg, 120);
+  })
 });
 
 
