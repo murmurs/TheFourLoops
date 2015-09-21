@@ -209,8 +209,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
     //How I call it when they are attacking
     //Bug is kakashi attacks twice
-    socket.emit('startAnimate', { avatar : 'kakashi', animation: 'attack' });
-    socket.emit('startAnimate', { avatar : 'naruto', animation: 'attack' });
+
   };
 
   $scope.$on('$destroy', function(){
@@ -296,6 +295,22 @@ angular.module('coderace.race', ['ui.codemirror'])
   var thread, thread2;
 
   socket.on('animate', function(data){
+
+    if(data.moveType === 'normalAttack'){
+      if(data.facebookId === facebookId){
+        switchImg('attack', 'naruto');
+      } else{
+        switchImg('attack', 'kakashi');
+      }
+    }
+    else if(data.moveType === 'knockOut'){
+      if(data.facebookId === facebookId){
+        // call KO & Death Function
+      } else{
+        // call KO & Death Function
+      }
+    }
+
     var elem = img[2];
     var elem2 = img[3];
 
