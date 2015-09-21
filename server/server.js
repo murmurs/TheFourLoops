@@ -136,7 +136,7 @@ var roomCount = 0;// number of rooms so we can make new rooms
 io.on('connection', function (socket) {
   /* new socket (user) joins waiting room */
   
-  
+  /* handles the animation */
   socket.on('startAnimate', function(){
     socket.emit('animate', {
       character1 : 'stance',
