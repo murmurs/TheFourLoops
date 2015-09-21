@@ -139,7 +139,7 @@ io.on('connection', function (socket) {
   /* handles the animation */
   socket.on('startAnimate', function(data){
     socket.emit('animate', {
-      action : [data.avatar, data.animation]
+      action : [data.animation, data.avatar]
     })
   });
 
