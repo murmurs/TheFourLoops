@@ -22,6 +22,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   var facebookDisplayName = document.facebookDisplayName = cookies.displayName;
   var startTime;
   var challengeId;
+  var maxSemiColons = 0;
 
   // countdown timer
   function timer(){
@@ -201,12 +202,19 @@ angular.module('coderace.race', ['ui.codemirror'])
   }
 
   $scope.typing = function(code){
+    semiColonMatchArr = code.match(/;/g);
+    semiColonCount = semiColonMatchArr.length
     socket.emit('typing', {
       code: code,
       facebookId: facebookId,
       startTime: startTime,
       challengeId: challengeId,
+      maxSemiColons: maxSemiColons,
+      semiColonCount: semiColonCount,
     });
+
+    maxSemiColons = maxSemiColons < semiColonCount ? semiColonCount : maxSemiColons;
+    console.log('from race controller semi colons', maxSemiColons, semiColonCount)
   };
 
   $scope.$on('$destroy', function(){

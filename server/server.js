@@ -189,27 +189,35 @@ io.on('connection', function (socket) {
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
-        if (room.split(' ')[0] === 'codeRoomGhost')
-        io.to(room).emit('animate', {
-          facebookId: data.facebookId,
-          moveType: 'normalAttack',
-        });
+        if (room.split(' ')[0] === 'codeRoomGhost'){
+          if(data.maxSemiColons < data.semiColonCount){
+            io.to(room).emit('animate', {
+              facebookId: data.facebookId,
+              moveType: 'knockOut',
+            })
+            console.log('should fire the new knockout animation')
+          }
 
-        roomMatch = room.split(' ');
-        if(roomMatch[0] === 'codeRoom' || roomMatch[0] === 'codeRoomGhost') {
-
-          var matchRefUrl = roomMatch[1];
-          var matchRef = new Firebase(matchRefUrl);
-          var playerRef = matchRef.child('players/' + data.facebookId)
-          var typingState = playerRef.push();
-
-          matchRef.update({'startTime': data.startTime});
-          matchRef.update({'challengeId': data.challengeId});
-          data.timestamp = Date.now();
-          // data.room = room;
-          typingState.update(data);
+          io.to(room).emit('animate', {
+            facebookId: data.facebookId,
+            moveType: 'normalAttack',
+          });
         }
+      }
 
+      roomMatch = room.split(' ');
+      if(roomMatch[0] === 'codeRoom' || roomMatch[0] === 'codeRoomGhost') {
+
+        var matchRefUrl = roomMatch[1];
+        var matchRef = new Firebase(matchRefUrl);
+        var playerRef = matchRef.child('players/' + data.facebookId)
+        var typingState = playerRef.push();
+
+        matchRef.update({'startTime': data.startTime});
+        matchRef.update({'challengeId': data.challengeId});
+        data.timestamp = Date.now();
+        // data.room = room;
+        typingState.update(data);
       }
     }.bind(this));
   });
@@ -224,9 +232,9 @@ io.on('connection', function (socket) {
 
   function testGhost(room){
 
-    var testGhost = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
+    var testGhostRef = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
 
-    testGhost.once('value', function(snapshot){
+    testGhostRef.once('value', function(snapshot){
       var ghostTypingObj = snapshot.val();
       var ghostTypingArr = [];
 
