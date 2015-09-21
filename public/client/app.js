@@ -14,6 +14,10 @@ angular.module('coderace', ['coderace.factories','coderace.race', 'ngRoute', 'co
     templateUrl: 'client/addTest/addTest.html',
     controller: 'testController'
   })
+  .when('/aboutUs', {
+    templateUrl: 'client/aboutUs/aboutUs.html',
+    controller: 'aboutUsController'
+  })
   .otherwise({
     redirectTo: '/'
   })
