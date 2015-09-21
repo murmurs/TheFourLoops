@@ -196,7 +196,7 @@ io.on('connection', function (socket) {
         });
 
         roomMatch = room.split(' ');
-        if(roomMatch[0] === 'codeRoom') {
+        if(roomMatch[0] === 'codeRoom' || roomMatch[0] === 'codeRoomGhost') {
 
           var matchRefUrl = roomMatch[1];
           var matchRef = new Firebase(matchRefUrl);
