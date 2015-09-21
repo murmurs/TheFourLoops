@@ -203,7 +203,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   $scope.typing = function(code){
     semiColonMatchArr = code.match(/;/g);
-    semiColonCount = semiColonMatchArr.length
+    var semiColonCount = semiColonMatchArr ? semiColonMatchArr.length : 0;
     socket.emit('typing', {
       code: code,
       facebookId: facebookId,
