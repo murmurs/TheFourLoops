@@ -220,6 +220,8 @@ angular.module('coderace.race', ['ui.codemirror'])
       Race.setProblem(problem);
     }, 0, problem);
   });
+  
+  //Everything below here is for the animation
   var stance = {
     'kakashi' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png',  'stance/Position6.png'],
     'naruto' : ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png', 'stance/Position6.png']
