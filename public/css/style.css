@@ -11,6 +11,15 @@ h4, button{
   display: inline;
 }
 
+#profilepic {
+  width: 275px;
+  border-radius: 137.5px;
+}
+
+#aboutusText {
+  color: #ECF0F5;
+}
+
 .logo {
   position: relative;
   top:-2px;
