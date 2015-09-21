@@ -24,7 +24,10 @@ angular.module('coderace.race', ['ui.codemirror'])
 
   // countdown timer
   function timer(){
-    socket.emit('startAnimate');
+    //Call them like these at the start.
+    socket.emit('startAnimate', { avatar : 'kakashi', animation: 'stance' });
+    socket.emit('startAnimate', { avatar : 'naruto', animation: 'stance' });
+    
     $scope.counter = 5;
     $scope.countComplete = true;
     var countDown = setInterval(function() {
@@ -168,6 +171,11 @@ angular.module('coderace.race', ['ui.codemirror'])
       facebookId: facebookId,
       startTime: startTime,
     });
+    
+    //How I call it when they are attacking
+    //Bug is kakashi attacks twice
+    socket.emit('startAnimate', { avatar : 'kakashi', animation: 'attack' });
+    socket.emit('startAnimate', { avatar : 'naruto', animation: 'attack' });
   };
 
   $scope.$on('$destroy', function(){
@@ -246,55 +254,65 @@ angular.module('coderace.race', ['ui.codemirror'])
     var elem = img[2];
     var elem2 = img[3];
     
-    function stanceImg(avatar){
-      if (avatar === 'kakashi') index++;
-      else if (avatar === 'naruto') index2++;
+    function kakashiStanceImg(){
+      index++;
       
-      if (avatar === 'kakashi' && index >= stance.kakashi.length) index = 0;
-      else if (avatar === 'naruto' && index2 >= stance.naruto.length) index2 = 0;
+      if (index >= stance.kakashi.length) index = 0;  
       
-      if (avatar === 'kakashi') elem.src = avatarPath + stance.kakashi[index];
-      else if (avatar === 'naruto') elem2.src = avatarPath2 + stance.naruto[index2];
+      elem.src = avatarPath + stance.kakashi[index];
     }
-      
-    function attackImg(avatar){
-      if (avatar === 'kakashi') index++;
-      else if (avatar === 'naruto') index2++;
+    
+    function narutoStanceImg(){
+      index2++;
 
-      if (avatar === 'kakashi') {
-        if (index >= attack.kakashi.length) {
-          switchImg(stanceImg.bind(null, 'kakashi'), 100, avatar)
-        }
-        else elem.src = avatarPath + attack.kakashi[index];
-      }
-      else if (avatar === 'naruto') {
-        if (index2 >= attack.naruto.length) {
-          switchImg(function(){ stanceImg('naruto') }, 100, avatar);
-        }
-        else elem2.src = avatarPath2 + attack.naruto[index];
-      }
+      if (index2 >= stance.naruto.length) index2 = 0;
+      
+      elem2.src = avatarPath2 + stance.naruto[index2];
     }
       
-    function switchImg(img, duration, avatar, attacking, running){
+    function kakashiAttackImg(){
+      index++;
+
+      if (index >= attack.kakashi.length) {
+        switchImg('stance', 'kakashi')
+      }
+      else elem.src = avatarPath + attack.kakashi[index];
+    }
+    
+    function narutoAttackImg(){
+      index2++;
+      
+      if (index2 >= attack.naruto.length) {
+        switchImg('stance', 'naruto');
+      }
+      else elem2.src = avatarPath2 + attack.naruto[index];
+    }
+      
+    function switchImg(animation, avatar, duration, attacking, running){
       duration = duration || 100;
-      index = 0;
+      index = -1;
+      index2 = -1;
       attacking = attacking || false;
       running = running || false;
+      
       if (avatar === 'kakashi') { 
-        clearInterval(thread); //For clearing a setInterval
-        thread = setInterval(img, duration);
+        clearInterval(thread);
+        
+        if (animation === 'stance') thread = setInterval(kakashiStanceImg, duration);
+        else if (animation === 'attack') thread = setInterval(kakashiAttackImg, duration);
       }
-      else if (avatar === 'naruto') {
+      else if (avatar === 'naruto') { 
         clearInterval(thread2);
-        thread2 = setInterval(img, duration);
+        
+        if (animation === 'stance') thread2 = setInterval(narutoStanceImg, duration);
+        else if (animation === 'attack') thread2 = setInterval(narutoAttackImg, duration);
       }
     }
  
-    switchImg(stanceImg.bind(null, data['character1']), 100, data['character1']);
-    switchImg(attackImg.bind(null, data['character2']), 100, data['character2']);
+    switchImg(data.action[1], data.action[0]);
     
-    //to call the attack function just use this:
-    //attackImg(avatarName);
+    //Call the animation like this:
+    //switchImg(animationStrin, data[character]);
   })
 });
 
