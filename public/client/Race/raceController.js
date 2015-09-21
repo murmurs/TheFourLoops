@@ -271,24 +271,33 @@ angular.module('coderace.race', ['ui.codemirror'])
   var running = false;
   var avatarPath = "img/kakashi/";
   var avatarPath2 = "img/naruto/"
-  
+
   var thread, thread2;
-  
+
   socket.on('animate', function(data){
     var elem = img[2];
     var elem2 = img[3];
-    
+
+
+    if(data.moveType === 'normalAttack'){
+      if(data.facebookId === facebookId){
+        attackImg('naruto');
+      } else{
+        attackImg('kakashi');
+      }
+    }
+
     function stanceImg(avatar){
       if (avatar === 'kakashi') index++;
       else if (avatar === 'naruto') index2++;
-      
+
       if (avatar === 'kakashi' && index >= stance.kakashi.length) index = 0;
       else if (avatar === 'naruto' && index2 >= stance.naruto.length) index2 = 0;
-      
+
       if (avatar === 'kakashi') elem.src = avatarPath + stance.kakashi[index];
       else if (avatar === 'naruto') elem2.src = avatarPath2 + stance.naruto[index2];
     }
-      
+
     function attackImg(avatar){
       if (avatar === 'kakashi') index++;
       else if (avatar === 'naruto') index2++;

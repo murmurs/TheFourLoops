@@ -173,6 +173,10 @@ io.on('connection', function (socket) {
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
+        io.to(room).emit('animate', {
+          facebookId: data.facebookId,
+          moveType: 'normalAttack',
+        });
 
         roomMatch = room.split(' ');
         if(roomMatch[0] === 'codeRoom') {
