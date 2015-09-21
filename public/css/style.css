@@ -150,7 +150,7 @@ h4, button{
   margin-right: auto;
   width: 150%;
   position: relative;
-  top: 20px;
+  top: 6px;
   left: -50px;
 }
 .fightAnimation2 {
@@ -160,7 +160,7 @@ h4, button{
   transform: rotateY(180deg);
   width: 150%;
   position: relative;
-  top: 20px;
+  top: 6px;
 }
 
 /*.nav, .text-center{
