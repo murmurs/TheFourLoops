@@ -164,15 +164,21 @@ io.on('connection', function (socket) {
 
   socket.on('start', function(data){
     socket.username = data.username;
-    socket.join('waitingRoom', function(err){
-      if(err){
-        console.log(err)
-      }else{
-        /*  check the wiating room for other players */
-        checkWaitingRoom();
-        // logRooms();
-      }
-    });
+    if(data.gameType === 'ghostMatch'){
+
+      ghostPair(this, data.username);
+
+    } else if(data.gameType === 'randomPlayerVsPlayer'){
+      socket.join('waitingRoom', function(err){
+        if(err){
+          console.log(err)
+        }else{
+          /*  check the wiating room for other players */
+          checkWaitingRoom();
+          // logRooms();
+        }
+      });
+    }
   });
 
   socket.on('typing', function(data){
@@ -203,6 +209,34 @@ io.on('connection', function (socket) {
           // data.room = room;
           typingState.update(data);
         }
+
+        var testGhost = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
+
+        var context = this;
+
+        testGhost.once('value', function(snapshot){
+          var ghostTypingObj = snapshot.val();
+          var ghostTypingArr = [];
+
+          for(var key in ghostTypingObj){
+            ghostTypingArr[ghostTypingArr.length] = ghostTypingObj[key];
+          }
+
+          ghostTypingArr.sort(function(a,b){
+            return a.timestamp - b.timestamp;
+          })
+
+          ghostTypingArr.forEach(function(typedObject, i, l){
+            var delay = typedObject.timestamp - typedObject.startTime;
+            console.log('outside', i, delay)
+            setTimeout(function(){
+              // if(typedObject.room === room){
+                console.log('fire', i);
+                io.to(room).emit('typing', typedObject);
+              // }
+            }, delay)
+          })
+        })
 
       }
     }.bind(this));
@@ -266,6 +300,33 @@ var checkWaitingRoom = function(){
   }
 };
 
+var ghostPair = function(player1, playerUserName){
+  var matchId = firebase.child('Matches').push();
+  matchId.set({
+    'startTime': Date.now(),
+    'endTime': 'empty',
+    // 'challengeId': 'empty',
+    // 'winnerId': 'empty',
+  })
+
+  var room = 'codeRoomGhost ' + matchId;
+  player1.join(room, function(err){
+    if(err){
+      console.log(err);
+    }
+    io.to(player1.id).emit('master');
+
+      /*  remit roomJoined to all members, possibly for start  */
+      var roomMatch = room.split(' ');
+      var matchId = roomMatch[1].slice(-20);
+      io.sockets.to(room).emit('roomJoined', {
+        matchId: matchId,
+        player1:'Ghost Player',
+        player2: playerUserName,
+      });
+  })
+}
+
 var pair = function(room, player1, player2, callback){
 
   /*  players join rooms one after another, with callback invoked afterwards 
@@ -308,7 +369,7 @@ var checkPlayerRooms = function(){
     /*  only check coding rooms, not socket default rooms */
     if(/codeRoom/.test(rooms[i])){
       var clients = Object.keys(io.nsps['/'].adapter.rooms[rooms[i]]);
-      if( clients.length < 2 && (rooms[i] !== 'waitingRoom') ){
+      if( clients.length < 2 && (rooms[i] !== 'waitingRoom' && rooms[i].slice(8, 14) !== 'Ghost') ){
         /* found a room with a single socket */
           io.sockets.to(rooms[i]).emit('opponentLeft');
       }

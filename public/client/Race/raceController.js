@@ -37,6 +37,10 @@ angular.module('coderace.race', ['ui.codemirror'])
         $('#waitingOverlay').css('display', 'none');
         codeMirror();
         startTime = Date.now();
+        var matchId = $scope.room
+        var matchRef = Race.dataRef.child('Matches/' + matchId);
+        matchRef.update({'startTime': startTime});
+        matchRef.update({'challengeId': challengeId});
       }
     }, 1000);
   }
@@ -209,10 +213,18 @@ angular.module('coderace.race', ['ui.codemirror'])
     socket.connect();
   }
 
-  socket.emit('start', {
-    username: facebookDisplayName.split(' ')[0],
-  });
-  
+  if(true){
+    socket.emit('start', {
+      username: facebookDisplayName.split(' ')[0],
+      gameType: 'ghostMatch',
+    })
+  } else if(false){
+    socket.emit('start', {
+      username: facebookDisplayName.split(' ')[0],
+      gameType: 'randomPlayerVsPlayer'
+    });
+  }
+
   socket.on('opponentLeft', function(){
     $scope.opponentLeft = true;
   });
