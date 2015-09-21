@@ -97,11 +97,33 @@ angular.module('coderace.race', ['ui.codemirror'])
     $scope.passed = undefined;
     $scope.responseText = undefined;
 
+    var matchId = $scope.room
+
     var storeMatchResults = function(){
-      var matchId = $scope.room
       Race.dataRef.child('Matches/' + matchId).update({
         winnerId: facebookId,
         endTime: Date.now(),
+      })
+    }
+
+    var storeGhost = function(){
+      var matchRef = Race.dataRef.child('Matches/' + matchId);
+      var matchesRef = matchRef.parent();
+
+      matchRef.once('value', function(snapshot){
+        var matchObj = snapshot.val();
+
+        var winnerId = matchObj.winnerId;
+        var winnerTypingDataRef = matchRef.child('players/' + winnerId);
+        winnerTypingDataRef.once('value', function(snapshot){
+          var ghostData = snapshot.val();
+          var ghostsRef = Race.dataRef.child('Challenges/' + challengeId + '/Ghosts');
+          var ghostIdRef = ghostsRef.push();
+          ghostIdRef.set({
+            typingData: ghostData,
+            gameDuration: matchObj.endTime - matchObj.startTime,
+          });
+        })
       })
     }
 
@@ -115,6 +137,7 @@ angular.module('coderace.race', ['ui.codemirror'])
       $scope.responseText = codeResponse.passed ? "correct!" : "incorrect";
       if(codeResponse.passed){
         storeMatchResults();
+        storeGhost();
       }
 
       $scope.$apply(); //apply the scope to the dom once the worker has responded with results.
