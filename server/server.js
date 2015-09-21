@@ -193,10 +193,6 @@ io.on('connection', function (socket) {
         if(roomMatch[0] === 'codeRoom') {
 
           var matchRefUrl = roomMatch[1];
-          // console.log('maaaaaaaaaatchID', matchId);
-          console.log('roooooooooooooom', matchRefUrl);
-          console.log('roooooooooooooom', room);
-          console.log('dataaaaaaaaaaaaa', data);
           var matchRef = new Firebase(matchRefUrl);
           var playerRef = matchRef.child('players/' + data.facebookId)
           var typingState = playerRef.push();
