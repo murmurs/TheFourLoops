@@ -139,7 +139,7 @@ io.on('connection', function (socket) {
   /* handles the animation */
   socket.on('startAnimate', function(data){
     socket.emit('animate', {
-      action : [data.avatar, data.animation]
+      action : [data.animation, data.avatar]
     })
   });
 
@@ -189,6 +189,7 @@ io.on('connection', function (socket) {
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
         this.to(room).emit('typing', data);
+        if (room.split(' ')[0] === 'codeRoomGhost')
         io.to(room).emit('animate', {
           facebookId: data.facebookId,
           moveType: 'normalAttack',
