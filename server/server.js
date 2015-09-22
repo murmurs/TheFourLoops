@@ -15,9 +15,9 @@ var port = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 app.use(express.static('bower_components'));
-app.use(session({ 
+app.use(session({
   secret: 'My Glorious God, The Murmur God!',
-  store: new FirebaseStore({ 
+  store: new FirebaseStore({
     host : 'codefighter.firebaseio.com',
     reapInterval : 10000
   }),
@@ -62,7 +62,7 @@ passport.use(new FacebookStrategy({
       // to associate the Facebook account with a user record in your database,
       // and return that user instead.
       return done(null, profile);
-    });   
+    });
   }
 ));
 
@@ -107,7 +107,7 @@ app.get('/profile', function(req, res){
 app.get('/logout', function(req, res){
   req.session.destroy();
   req.session = null;
-  
+
   req.logout();
   // res.clearCookie('connect.sid'); //Should I destroy this aswell?
   res.clearCookie('userID');
@@ -135,7 +135,7 @@ var roomCount = 0;// number of rooms so we can make new rooms
 
 io.on('connection', function (socket) {
   /* new socket (user) joins waiting room */
-  
+
   /* handles the animation */
   socket.on('startAnimate', function(data){
     socket.emit('animate', {
@@ -181,10 +181,10 @@ io.on('connection', function (socket) {
   });
 
   socket.on('typing', function(data){
-    /*  
-    route typing inputs to relevant rooms 
-    this refers to the socket, emissions sent 
-    to a socket's list of rooms    
+    /*
+    route typing inputs to relevant rooms
+    this refers to the socket, emissions sent
+    to a socket's list of rooms
     */
     this.rooms.forEach(function(room){
       if( room !== 'waitingRoom'){
@@ -193,7 +193,7 @@ io.on('connection', function (socket) {
           if(data.maxSemiColons < data.semiColonCount){
             io.to(room).emit('animate', {
               facebookId: data.facebookId,
-              moveType: 'knockOut',
+              moveType: 'specialAttack',
             })
             console.log('should fire the new knockout animation')
           }
@@ -262,7 +262,7 @@ io.on('connection', function (socket) {
             if(typedObject.maxSemiColons < typedObject.semiColonCount){
               io.to(room).emit('animate', {
                 facebookId: 'ghost',
-                moveType: 'knockOut',
+                moveType: 'specialAttack',
               })
               console.log('should fire the new knockout animation')
             }
@@ -359,7 +359,7 @@ var ghostPair = function(player1, playerUserName){
 
 var pair = function(room, player1, player2, callback){
 
-  /*  players join rooms one after another, with callback invoked afterwards 
+  /*  players join rooms one after another, with callback invoked afterwards
     -player1 joins
     -player2 joins
     -both player leave waiting room, all in node async fashion
@@ -394,7 +394,7 @@ var pair = function(room, player1, player2, callback){
 
 var checkPlayerRooms = function(){
   /*  get list of all rooms */
-  var rooms = Object.keys(io.sockets.adapter.rooms); 
+  var rooms = Object.keys(io.sockets.adapter.rooms);
   for(var i = 0; i < rooms.length; i++){
     /*  only check coding rooms, not socket default rooms */
     if(/codeRoom/.test(rooms[i])){
@@ -411,7 +411,7 @@ var logRooms = function(){
   /*  just a helper function for debugging, not that there would be any :) */
   console.log('============================================================');
   for(var socket in io.of('/').connected){
-    console.log('socket.username: ', io.of('/').connected[socket].username,  ' rooms :', io.of('/').connected[socket].rooms); 
+    console.log('socket.username: ', io.of('/').connected[socket].username,  ' rooms :', io.of('/').connected[socket].rooms);
   }
   console.log('============================================================');
 };

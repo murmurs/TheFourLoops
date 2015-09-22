@@ -309,6 +309,7 @@ angular.module('coderace.race', ['ui.codemirror'])
   var left = -50, left2 = -30;
   var attacking = false, attacking2 = false;
   var dead = false, dead2 = false;
+  var specialed = false, specialed2 = false;
   var running = false;
   var avatarPath = "img/kakashi/";
   var avatarPath2 = "img/naruto/"
@@ -339,6 +340,21 @@ angular.module('coderace.race', ['ui.codemirror'])
         switchImg('stance', 'naruto');
         data.action = ['specialAttack', 'kakashi'];
 
+      }
+    }
+    else if(data.moveType === 'specialAttack'){
+      if(data.facebookId === facebookId){
+        attacking2 = false;
+        specialed = true;
+        switchImg('stance', 'naruto');
+        switchImg('stance', 'kakashi');
+        data.action = ['specialAttack', 'naruto'];
+      } else{
+        attacking = false;
+        specialed2 = true;
+        switchImg('stance', 'kakashi');
+        switchImg('stance', 'naruto');
+        data.action = ['specialAttack', 'kakashi'];
       }
     }
 
@@ -395,6 +411,7 @@ angular.module('coderace.race', ['ui.codemirror'])
 
       if (index >= specialAttack.kakashi.length) {
         attacking = false;
+        specialed2 = false;
         switchImg('stance', 'kakashi');
         left = -50;
       }
@@ -436,20 +453,27 @@ angular.module('coderace.race', ['ui.codemirror'])
         if (index2 === 0) left2 = -150;
         elem2.style.width = '210%';
         if (index2 >= 8 && index2 <= 12) left2 -= 80;
-        if (index2 >= 42) {
-          elem2.style.width = '150%';
-          left2 = -400;
-        }
+
 
         elem2.style.left = left2 + "px";
 
-        if (index2 >= specialWin.naruto.length) {
-          if (!done) switchImg('defeat', 'kakashi');
+        if (index2 >= 42) {
           attacking2 = false;
-          index2 = 53;
-          done = true;
+          switchImg('win', 'naruto');
+          switchImg('defeat', 'kakashi');
         }
-        elem2.src = avatarPath2 + specialWin.naruto[index2];
+        else elem2.src = avatarPath2 + specialWin.naruto[index2];
+    }
+
+    function narutoWinImg(){
+      index2++;
+      elem2.style.width = '150%';
+      elem2.style.left = left2 + "px";
+
+      if (index2 >= specialWin.naruto.length){
+        index2 = 53;
+      }
+      elem2.src = avatarPath2 + specialWin.naruto[index2];
     }
 
     function switchImg(animation, avatar, duration){
@@ -473,11 +497,16 @@ angular.module('coderace.race', ['ui.codemirror'])
         else if (animation === 'specialAttack') thread2 = setInterval(narutoSpecialAttackImg, duration);
         else if (animation === 'specialWin') thread2 = setInterval(narutoSpecialWinImg, duration);
         else if (animation === 'defeat') thread2 = setInterval(narutoDefeatImg, duration);
+        else if (animation === 'win') {
+          left2 = -400;
+          index2 = 42;
+          thread2 = setInterval(narutoWinImg, duration);
+        }
       }
     }
 
-    if (data.action[1] === 'naruto' && !dead2) {
-      if (data.action[0] !== 'stance'  && !attacking2) {
+    if (data.action[1] === 'naruto' && !dead2 && !specialed2) {
+      if (data.action[0] !== 'stance'  && !attacking2 && !specialed2) {
         attacking2 = true;
         switchImg(data.action[0], data.action[1]);
       }
@@ -486,8 +515,8 @@ angular.module('coderace.race', ['ui.codemirror'])
         switchImg(data.action[0], data.action[1]);
       }
     }
-    else if (data.action[1] === 'kakashi' && !dead) {
-      if (data.action[0] !== 'stance' && !attacking) {
+    else if (data.action[1] === 'kakashi' && !dead && !specialed) {
+      if (data.action[0] !== 'stance' && !attacking && !specialed) {
         attacking = true;
         switchImg(data.action[0], data.action[1]);
       }
