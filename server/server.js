@@ -232,7 +232,8 @@ io.on('connection', function (socket) {
 
   function testGhost(room){
 
-    var testGhostRef = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
+    // var testGhostRef = firebase.child('Challenges/-Jzbf6p07j8OETQvJa4u/Ghosts/-Jzl6oKyfPS4vU_ET_C_/typingData');
+    var testGhostRef = firebase.child('Challenges/-JzbfBWR39B4lxoHjMnJ/Ghosts/-JzmPpea45zRZff_4S8t/typingData');
 
     testGhostRef.once('value', function(snapshot){
       var ghostTypingObj = snapshot.val();
@@ -257,6 +258,14 @@ io.on('connection', function (socket) {
               facebookId: 'ghost',
               moveType: 'normalAttack',
             });
+
+            if(typedObject.maxSemiColons < typedObject.semiColonCount){
+              io.to(room).emit('animate', {
+                facebookId: 'ghost',
+                moveType: 'knockOut',
+              })
+              console.log('should fire the new knockout animation')
+            }
           // }
         }, delay)
       })
