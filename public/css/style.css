@@ -328,7 +328,7 @@ h4, button{
   line-height: 1.4;
   margin-top: 20%;
 }
-#waitingOverlay{
+#waitingOverlay, #ko{
   background: rgba(0,0,0,0.85);
   width: 100vw;
   height: 100vh;
@@ -340,6 +340,11 @@ h4, button{
   font-size: 14px;
   line-height: 20px;
   z-index: 4;
+}
+
+#ko img{
+  position: relative;
+  top: 150px;
 }
 
 .counter{
@@ -387,3 +392,13 @@ h4, button{
   display: inline-block;
   padding: 10px;
 }
+<<<<<<< HEAD
+=======
+
+/*evaluation page*/
+#results{
+  position: relative;
+  z-index: 2;
+  top: -400px;
+}
+>>>>>>> [feat] remove modal logic

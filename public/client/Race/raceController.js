@@ -532,5 +532,3 @@ angular.module('coderace.race', ['ui.codemirror'])
     }
   })
 });
-
-
