@@ -345,13 +345,13 @@ angular.module('coderace.race', ['ui.codemirror'])
     else if(data.moveType === 'specialAttack'){
       if(data.facebookId === facebookId){
         attacking2 = false;
-        specialed = true;
+        // specialed = true;
         switchImg('stance', 'naruto');
         switchImg('stance', 'kakashi');
         data.action = ['specialAttack', 'naruto'];
       } else{
         attacking = false;
-        specialed2 = true;
+        // specialed2 = true;
         switchImg('stance', 'kakashi');
         switchImg('stance', 'naruto');
         data.action = ['specialAttack', 'kakashi'];
@@ -411,7 +411,9 @@ angular.module('coderace.race', ['ui.codemirror'])
 
       if (index >= specialAttack.kakashi.length) {
         attacking = false;
-        specialed2 = false;
+        attacking2 = false;
+        // specialed1 = false;
+        // specialed2 = false;
         switchImg('stance', 'kakashi');
         left = -50;
       }
@@ -426,7 +428,10 @@ angular.module('coderace.race', ['ui.codemirror'])
       elem2.style.left = left2 + "px";
 
       if (index2 >= specialAttack.naruto.length) {
+        attacking = false;
         attacking2 = false;
+        // specialed = false;
+        // specialed2 = false;
         switchImg('stance', 'naruto');
       }
       else elem2.src = avatarPath2 + specialAttack.naruto[index2];
