@@ -1,41 +1,26 @@
-<div class="navbar navbar-inverse navbar-static-top">
-  <div class="container">
-    <a href="#/" class="navbar-brand">Js Derby</a>
-    <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <div class="collapse navbar-collapse navHeaderCollapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#/">Home</a></li>
-      </ul>
-    </div>
+<form>
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon" id="sizing-addon3">Name: </span>
+    <input type="text" class="form-control" placeholder="Name of question" aria-describedby="sizing-addon3" ng-model="nameContent" />
   </div>
-</div> 
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon" id="sizing-addon3">Question: </span>
+    <input type="text" class="form-control" placeholder="Question" aria-describedby="sizing-addon3" ng-model="questionContent" />
+  </div>
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon" id="sizing-addon3">Inputs: </span>
+    <input type="text" class="form-control" placeholder="Ex. [[1,2,3], [3,4,6]] or ['face', 'run']" aria-describedby="sizing-addon3" ng-model="inputContent" />
+  </div>
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon" id="sizing-addon3">Outputs: </span>
+    <input type="text" class="form-control" placeholder="Ex. [6, 13] or ['ecaf', 'nur']" aria-describedby="sizing-addon3" ng-model="outputContent" />
+  </div>
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon" id="sizing-addon3">Starting Template: </span>
+    <input type="text" class="form-control" placeholder="Ex. var sum = function() {}" aria-describedby="sizing-addon3" ng-model="startContent" />
+  </div>
+  <div style="width: 100%; text-align: center; margin-top: 10px">
+    <button class="btn-success" style="display: inline-block" ng-click="send()">Submit</button>
+  </div>
+</form>
 
-  <form>
-    <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="sizing-addon3">Name: </span>
-      <input type="text" class="form-control" placeholder="Name of question" aria-describedby="sizing-addon3" ng-model="nameContent" />
-    </div>
-    <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="sizing-addon3">Question: </span>
-      <input type="text" class="form-control" placeholder="Question" aria-describedby="sizing-addon3" ng-model="questionContent" />
-    </div>
-    <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="sizing-addon3">Inputs: </span>
-      <input type="text" class="form-control" placeholder="Ex. [[1,2,3], [3,4,6]] or ['face', 'run']" aria-describedby="sizing-addon3" ng-model="inputContent" />
-    </div>
-    <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="sizing-addon3">Outputs: </span>
-      <input type="text" class="form-control" placeholder="Ex. [6, 13] or ['ecaf', 'nur']" aria-describedby="sizing-addon3" ng-model="outputContent" />
-    </div>
-    <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="sizing-addon3">Starting Template: </span>
-      <input type="text" class="form-control" placeholder="Ex. var sum = function() {}" aria-describedby="sizing-addon3" ng-model="startContent" />
-    </div>    
-    <button ng-click="send()">Submit</button>
-  </form>
-
-</div>

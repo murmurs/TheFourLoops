@@ -38,10 +38,10 @@ angular.module('coderace.factories', [])
 
 .factory('Race', function ($rootScope) {
   var factory = {};
-  
+
   factory.username;
 
-  factory.dataRef = new Firebase("https://popping-heat-272.firebaseio.com/");
+  factory.dataRef = new Firebase("https://codefighter.firebaseio.com/");
 
   /*  called by slave user  */
   factory.setProblem = function(data){
@@ -57,11 +57,11 @@ angular.module('coderace.factories', [])
       callback(problem);// send slave the problem
     });
   };
-  
+
   factory.getLength = function(){
     factory.dataRef.child("Challenges").on("value", function(snapshot) {
       var challenges = snapshot.val();
-      $rootScope.$broadcast('GotLength', challenges.length);
+      $rootScope.$broadcast('GotLength');
     });
   };
 

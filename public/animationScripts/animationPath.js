@@ -1,0 +1,1 @@
+var stance = ['stance/Position1.png', 'stance/Position2.png', 'stance/Position3.png', 'stance/Position4.png', 'stance/Position5.png', 'stance/Position6.png'];
